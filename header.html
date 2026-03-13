@@ -1,89 +1,67 @@
-<style>
-  /* GNB 기본 스타일 */
-  .gnb-wrap { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1200px; margin: 0 auto; height: 100%; color: #333; }
-  .gnb-nav { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
-  .gnb-nav > li { position: relative; padding: 15px 0; }
-  
-  /* 상단 메뉴 글씨 (이건 보여야 함) */
-  .gnb-nav > li > a { 
-    text-decoration: none; 
-    color: #333 !important; /* 글씨색 강제 지정 */
-    font-weight: 600; 
-    font-size: 1rem;
-  }
-
-  /* 드롭다운 (마우스 올릴 때만 등장) */
-  .dropdown { 
-    display: none; 
-    position: absolute; 
-    top: 50px; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    background: #ffffff; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
-    border-radius: 12px; 
-    padding: 15px; 
-    z-index: 9999;
-    min-width: 160px;
-    border: 1px solid #eee;
-  }
-  
-  .gnb-nav > li:hover .dropdown { display: flex; flex-direction: column; gap: 10px; }
-  
-  /* 아이콘 링크 (글자 삭제 버전) */
-  .dropdown li { list-style: none; }
-  .dropdown li a { 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    font-size: 1.6rem; 
-    text-decoration: none; 
-    border-radius: 10px;
-    background: #f8f9fa;
-    transition: all 0.2s ease;
-  }
-  .dropdown li a:hover { background: #e9ecef; transform: translateY(-2px); }
-</style>
-
 <div class="gnb-wrap">
-  <a href="index.html" class="logo" style="text-decoration:none; color:#333; display:flex; align-items:center;">
-    <div class="logo-box" style="background:#333; color:#fff; width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:6px; margin-right:8px; font-weight:bold;">E</div>
-    <div class="logo-txt"><span style="font-weight:bold;">Eco</span>View</div>
+  <a href="index.html" class="logo">
+    <div class="logo-box">E</div>
+    <div class="logo-txt"><span>Eco</span>View</div>
   </a>
 
   <ul class="gnb-nav">
     <li><a href="#">시민 참여 ▾</a>
       <ul class="dropdown">
-        <li><a href="livinglab.html" title="리빙랩"><span>🧪</span></a></li>
-        <li><a href="openlab.html" title="오픈랩"><span>🔬</span></a></li>
-        <li><a href="citizen_education.html" title="시티즌교육"><span>🎓</span></a></li>
+        <li><a href="livinglab.html"><span>🧪</span> 리빙랩</a></li>
+        <li><a href="openlab.html"><span>🔬</span> 오픈랩</a></li>
+        <li><a href="citizen_education.html"><span>🎓</span> 시티즌교육</a></li>
       </ul>
     </li>
+
     <li><a href="#">데이터 ▾</a>
       <ul class="dropdown">
-        <li><a href="data_list.html" title="데이터 목록"><span>📂</span></a></li>
-        <li><a href="data_request.html" title="신규 데이터 신청"><span>📥</span></a></li>
-        <li><a href="data_guide.html" title="데이터 활용 가이드"><span>📖</span></a></li>
+        <li><a href="data_list.html"><span>📂</span> 데이터 목록</a></li>
+        <li><a href="data_request.html"><span>📥</span> 신규 데이터 신청</a></li>
+        <li><a href="data_guide.html"><span>📖</span> 데이터 활용 가이드</a></li>
       </ul>
     </li>
+
+    <li><a href="#">탄소중립 스마트도시 ▾</a>
+      <ul class="dropdown">
+        <li><a href="carbon_realtime.html"><span>🌡</span> 실시간 현황</a></li>
+        <li><a href="carbon_reduction.html"><span>📉</span> 탄소감축 현황</a></li>
+        <li><a href="carbon_insight.html"><span>💡</span> 탄소중립 인사이트</a></li>
+      </ul>
+    </li>
+
     <li><a href="#">도시지표 ▾</a>
       <ul class="dropdown">
-        <li><a href="indicator_carbon.html" title="탄소지표"><span>📊</span></a></li>
-        <li><a href="indicator_smart.html" title="스마트도시 지표"><span>🏙</span></a></li>
+        <li><a href="indicator_carbon.html"><span>📊</span> 탄소지표</a></li>
+        <li><a href="indicator_smart.html"><span>City</span> 스마트도시 지표</a></li>
       </ul>
     </li>
+
+    <li><a href="#">스마트 시티맵 ▾</a>
+      <ul class="dropdown">
+        <li><a href="map_cctv.html"><span>📷</span> CCTV</a></li>
+        <li><a href="map_safety.html"><span>🛡</span> 안전시설</a></li>
+        <li><a href="map_facility.html"><span>🏪</span> 편의시설</a></li>
+      </ul>
+    </li>
+
     <li><a href="#">이용안내 ▾</a>
       <ul class="dropdown">
-        <li><a href="about_site.html" title="사이트 소개"><span>🏠</span></a></li>
-        <li><a href="notice.html" title="공지사항"><span>📢</span></a></li>
-        <li><a href="guide.html" title="이용안내"><span>❓</span></a></li>
+        <li><a href="about_site.html"><span>🏠</span> 사이트 소개</a></li>
+        <li><a href="notice.html"><span>📢</span> 공지사항</a></li>
+        <li><a href="guide.html"><span>❓</span> 이용안내</a></li>
+      </ul>
+    </li>
+
+    <li><a href="#">마이페이지 ▾</a>
+      <ul class="dropdown">
+        <li><a href="my_applications.html"><span>📑</span> 신청내역</a></li>
+        <li><a href="my_account.html"><span>👤</span> 계정관리</a></li>
       </ul>
     </li>
   </ul>
 
   <div class="gnb-right">
-    <button style="padding: 8px 16px; border-radius: 6px; border: 1px solid #ccc; background: none; cursor: pointer;">로그인</button>
+    <button class="btn-sm btn-ghost">로그인</button>
+    <button class="btn-sm btn-fill">회원가입</button>
   </div>
 </div>
