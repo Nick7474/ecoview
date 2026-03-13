@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>에코뷰 | 시민참여 - 오픈랩</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & ROOT ─── */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;scroll-behavior:smooth;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f4f8fb;color:#1a2332;}
+
+:root{
+  --p:#2DBE7C; --pd:#1AA065; --pl:#E6F9F0; --pm:#C0EDD8;
+  --op:#0EA5E9; --opd:#0284C7; --opl:#EFF6FF;
+  --t1:#1a2332; --t2:#4b5968; --t3:#8a97a6;
+  --bd:#E2EAF0; --bg:#f4f8fb; --wh:#fff;
+  --sh:0 2px 12px rgba(0,0,0,.08);
+  --sh2:0 6px 24px rgba(0,0,0,.12);
+  --r:10px; --r2:16px;
+}
+
+/* ─── GNB ─── */
+.gnb{background:#fff;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:500;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.gnb-wrap{max-width:1380px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:62px;gap:0;}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;margin-right:36px;}
+.logo-box{width:34px;height:34px;background:linear-gradient(135deg,#2DBE7C,#1AA065);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.05rem;}
+.logo-txt{font-size:1.18rem;font-weight:800;letter-spacing:-.03em;}
+.logo-txt .e{color:#2DBE7C;}.logo-txt .v{color:#1a2332;}
+
+.gnb-nav{display:flex;list-style:none;height:62px;flex:1;}
+.gnb-nav>li{position:relative;height:100%;}
+.gnb-nav>li>a{display:flex;align-items:center;height:100%;padding:0 18px;font-size:.9rem;font-weight:600;color:#4b5968;text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;}
+.gnb-nav>li>a:hover,.gnb-nav>li.active>a{color:#1AA065;border-bottom-color:#2DBE7C;}
+.gnb-nav>li.active>a{font-weight:700;}
+.gnb-nav>li:hover .dropdown{opacity:1;pointer-events:auto;transform:translateY(0);}
+.dropdown{position:absolute;top:calc(100% + 1px);left:0;min-width:200px;background:#fff;border:1px solid var(--bd);border-top:2px solid #2DBE7C;border-radius:0 0 12px 12px;box-shadow:0 8px 28px rgba(0,0,0,.12);padding:8px 0;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s;z-index:600;}
+.dropdown li{list-style:none;}
+.dropdown li a{display:flex;align-items:center;gap:8px;padding:9px 20px;font-size:.85rem;color:#4b5968;text-decoration:none;transition:background .15s,color .15s;}
+.dropdown li a:hover{background:#E6F9F0;color:#1AA065;}
+.dropdown li.dd-active a{color:#1AA065;font-weight:700;}
+
+.gnb-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto;}
+.btn-sm{padding:6px 15px;border-radius:7px;font-size:.82rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;}
+.btn-ghost{border:1.5px solid var(--bd);background:#fff;color:#4b5968;}
+.btn-ghost:hover{border-color:#2DBE7C;color:#1AA065;}
+.btn-fill{border:none;background:#2DBE7C;color:#fff;}
+.btn-fill:hover{background:#1AA065;}
+
+/* ─── PAGE BAR ─── */
+/* 오픈랩은 블루 계열 포인트 */
+.page-bar{background:#0EA5E9;height:52px;display:flex;align-items:center;}
+.page-bar-inner{max-width:1380px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;width:100%;}
+.breadcrumb{display:flex;align-items:center;gap:7px;}
+.breadcrumb a,.breadcrumb span{font-size:.82rem;color:rgba(255,255,255,.75);text-decoration:none;}
+.breadcrumb a:hover{color:#fff;}
+.breadcrumb .sep{color:rgba(255,255,255,.4);font-size:.75rem;}
+.breadcrumb .cur{color:#fff;font-weight:700;}
+.page-bar-title{font-size:1rem;font-weight:800;color:#fff;}
+
+/* ─── CONTENT ─── */
+.content{max-width:1380px;margin:0 auto;padding:36px 32px 72px;}
+
+/* Anchor Nav */
+.anchor-nav{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);margin-bottom:32px;overflow:hidden;box-shadow:var(--sh);}
+.anchor-nav-inner{display:flex;align-items:center;}
+.anchor-item{flex:1;text-align:center;}
+.anchor-item a{display:block;padding:14px 8px;font-size:.86rem;font-weight:600;color:#4b5968;text-decoration:none;border-bottom:3px solid transparent;transition:all .2s;}
+.anchor-item a:hover{color:#0284C7;background:#f0f8ff;}
+.anchor-item.active a{color:#0284C7;border-bottom-color:#0EA5E9;background:#EFF6FF;font-weight:700;}
+.anchor-sep{width:1px;height:40px;background:#E2EAF0;flex-shrink:0;}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+.stat-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);padding:22px 24px;display:flex;align-items:center;gap:16px;box-shadow:var(--sh);}
+.stat-card-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;}
+.sci-b{background:#EFF6FF;}
+.sci-g{background:#E6F9F0;}
+.sci-y{background:#FFFBEB;}
+.sci-v{background:#F3E8FF;}
+.stat-num{font-size:1.7rem;font-weight:900;color:#1a2332;letter-spacing:-.04em;line-height:1;}
+.stat-num em{font-size:1rem;font-weight:600;color:#8a97a6;font-style:normal;}
+.stat-lbl{font-size:.75rem;color:#8a97a6;margin-top:3px;}
+
+/* Notice */
+.notice-bar{background:linear-gradient(90deg,#0c2a3d,#0e3a52);border-radius:var(--r);padding:13px 22px;display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.notice-tag{background:#0EA5E9;color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;flex-shrink:0;}
+.notice-txt{font-size:.87rem;color:rgba(255,255,255,.88);flex:1;}
+.notice-date{font-size:.77rem;color:rgba(255,255,255,.45);}
+
+/* Section header */
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+.sec-hd-left{display:flex;align-items:center;gap:10px;}
+.sec-tag{font-size:.73rem;font-weight:700;padding:3px 11px;border-radius:20px;letter-spacing:.03em;white-space:nowrap;}
+.sec-tag.blue{background:#EFF6FF;color:#0284C7;}
+.sec-tag.green{background:#E6F9F0;color:#1AA065;}
+.sec-tag.purple{background:#F3E8FF;color:#7C3AED;}
+.sec-tag.orange{background:#FEF3C7;color:#92400E;}
+.sec-hd h2{font-size:1.28rem;font-weight:800;color:#1a2332;letter-spacing:-.03em;}
+.sec-hd p{font-size:.82rem;color:#8a97a6;margin-top:2px;}
+.sec-more{font-size:.83rem;color:#0284C7;font-weight:600;text-decoration:none;}
+.sec-more:hover{text-decoration:underline;}
+
+/* ─── INTRO CARD (오픈랩 버전) ─── */
+.intro-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);margin-bottom:28px;}
+.intro-grid{display:grid;grid-template-columns:1fr 360px;}
+.intro-main{padding:32px 36px;background:linear-gradient(130deg,#eff6ff 0%,#fff 60%);}
+.intro-badge{display:inline-flex;align-items:center;gap:6px;background:#0EA5E9;color:#fff;font-size:.73rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.intro-main h3{font-family:'Noto Serif KR',serif;font-size:1.55rem;font-weight:700;color:#1a2332;line-height:1.38;letter-spacing:-.03em;margin-bottom:14px;}
+.intro-main h3 em{color:#0EA5E9;font-style:normal;}
+.intro-main p{font-size:.9rem;color:#4b5968;line-height:1.88;margin-bottom:18px;}
+.kw-list{display:flex;flex-wrap:wrap;gap:8px;}
+.kw{padding:5px 13px;border-radius:20px;font-size:.77rem;font-weight:600;background:#fff;border:1.5px solid #BAE6FD;color:#0284C7;}
+
+.intro-visual{background:linear-gradient(160deg,#0c2d4a,#082035);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:16px;position:relative;overflow:hidden;}
+.intro-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(14,165,233,.22) 0%,transparent 70%);}
+
+/* 오픈랩 3단계 다이어그램 */
+.ol-diagram{position:relative;z-index:1;width:100%;}
+.ol-stages{display:flex;flex-direction:column;gap:10px;}
+.ol-stage{background:rgba(255,255,255,.08);border:1px solid rgba(14,165,233,.3);border-radius:9px;padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all .2s;cursor:default;}
+.ol-stage:hover{background:rgba(14,165,233,.18);transform:translateX(3px);}
+.ol-stage-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#0EA5E9,#0284C7);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ol-stage-nm{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.9);}
+.ol-stage-d{font-size:.71rem;color:rgba(255,255,255,.52);margin-top:2px;}
+.ol-stage-num{margin-left:auto;font-size:1.1rem;font-weight:900;color:#0EA5E9;}
+
+.cycle-title{color:rgba(255,255,255,.85);font-size:.8rem;font-weight:700;letter-spacing:.04em;position:relative;z-index:1;}
+
+/* Bottom stat bar */
+.intro-bottom{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--bd);}
+.ib-item{padding:18px 22px;border-right:1px solid var(--bd);display:flex;align-items:center;gap:13px;}
+.ib-item:last-child{border-right:none;}
+.ib-icon{width:40px;height:40px;border-radius:11px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.ib-val{font-size:1.22rem;font-weight:900;color:#1a2332;letter-spacing:-.03em;line-height:1;}
+.ib-val span{font-size:.78rem;font-weight:500;color:#8a97a6;}
+.ib-lbl{font-size:.73rem;color:#8a97a6;margin-top:2px;}
+
+/* ─── Program Types (오픈랩 프로그램 유형) ─── */
+.prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.prog-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);padding:24px;box-shadow:var(--sh);transition:all .2s;cursor:default;}
+.prog-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);}
+.prog-card-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:14px;}
+.prog-card-icon.bl{background:#EFF6FF;}
+.prog-card-icon.gr{background:#E6F9F0;}
+.prog-card-icon.or{background:#FEF3C7;}
+.prog-card h4{font-size:.98rem;font-weight:800;color:#1a2332;margin-bottom:7px;}
+.prog-card p{font-size:.82rem;color:#4b5968;line-height:1.72;}
+.prog-tag{display:inline-block;margin-top:12px;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700;background:#EFF6FF;color:#0284C7;}
+.prog-tag.g{background:#E6F9F0;color:#1AA065;}
+.prog-tag.v{background:#F3E8FF;color:#7C3AED;}
+
+/* ─── PROCESS ─── */
+.process-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);padding:28px 32px;margin-bottom:28px;box-shadow:var(--sh);}
+.proc-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:24px;position:relative;}
+.proc-steps::before{content:'';position:absolute;top:27px;left:calc(10% + 20px);width:calc(80% - 40px);height:2px;background:linear-gradient(90deg,#0EA5E9,#BAE6FD);}
+.ps{display:flex;flex-direction:column;align-items:center;gap:9px;position:relative;z-index:1;}
+.ps:hover .ps-circle{transform:scale(1.08);box-shadow:0 4px 16px rgba(14,165,233,.35);}
+.ps-circle{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#0EA5E9,#0284C7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;box-shadow:0 2px 8px rgba(14,165,233,.3);transition:all .2s;position:relative;}
+.ps-num{position:absolute;top:-6px;right:-2px;background:#0284C7;color:#fff;font-size:.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.ps-lbl{font-size:.79rem;font-weight:700;color:#1a2332;text-align:center;line-height:1.3;}
+.ps-sub{font-size:.7rem;color:#8a97a6;text-align:center;line-height:1.4;}
+
+/* ─── SCHEDULE ─── */
+.schedule-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;margin-bottom:28px;box-shadow:var(--sh);}
+.sch-hd{padding:24px 32px 0;}
+.yr-tabs{display:flex;border-bottom:1px solid var(--bd);margin-top:14px;}
+.yr-tab{padding:8px 20px;font-size:.85rem;font-weight:600;color:#8a97a6;border-bottom:2.5px solid transparent;cursor:pointer;transition:all .2s;}
+.yr-tab.active{color:#0284C7;border-bottom-color:#0EA5E9;}
+.sch-body{padding:24px 32px 28px;overflow-x:auto;}
+.tl{min-width:680px;}
+.tl-hdr{display:grid;grid-template-columns:155px repeat(12,1fr);margin-bottom:4px;}
+.tl-m{text-align:center;font-size:.7rem;font-weight:700;color:#8a97a6;padding:3px 0;}
+.tl-m.now{color:#0EA5E9;}
+.tl-row{display:grid;grid-template-columns:155px repeat(12,1fr);align-items:center;margin-bottom:9px;}
+.tl-lbl{font-size:.79rem;font-weight:600;color:#1a2332;padding-right:12px;display:flex;align-items:center;gap:6px;}
+.tl-lbl .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.tl-bar{height:24px;border-radius:6px;display:flex;align-items:center;padding:0 9px;font-size:.7rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;}
+.bar-b{background:linear-gradient(90deg,#0EA5E9,#0284C7);}
+.bar-g{background:linear-gradient(90deg,#2DBE7C,#1AA065);}
+.bar-o{background:linear-gradient(90deg,#F59E0B,#D97706);}
+.bar-v{background:linear-gradient(90deg,#8B5CF6,#7C3AED);}
+.bar-gray{background:#f0f4f8;color:#8a97a6;border:1px solid #E2EAF0;font-weight:500;}
+
+/* ─── ANNOUNCE ─── */
+.announce-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;margin-bottom:28px;box-shadow:var(--sh);}
+.ann-hd{padding:24px 32px 0;}
+.filter-row{display:flex;align-items:center;gap:8px;padding:14px 32px;border-bottom:1px solid var(--bd);flex-wrap:wrap;}
+.fb{padding:6px 13px;border-radius:20px;font-size:.79rem;font-weight:600;border:1.5px solid var(--bd);background:#fff;color:#4b5968;cursor:pointer;font-family:inherit;transition:all .15s;}
+.fb.on{background:#0EA5E9;border-color:#0EA5E9;color:#fff;}
+.fb:hover:not(.on){border-color:#0EA5E9;color:#0284C7;}
+.fsep{width:1px;height:20px;background:#E2EAF0;}
+.fsearch{margin-left:auto;display:flex;gap:6px;}
+.si{padding:7px 13px;border-radius:7px;border:1.5px solid var(--bd);font-size:.81rem;font-family:inherit;color:#1a2332;outline:none;width:190px;}
+.si:focus{border-color:#0EA5E9;}
+.sb{padding:7px 13px;border-radius:7px;background:#0EA5E9;border:none;color:#fff;font-size:.81rem;cursor:pointer;font-family:inherit;font-weight:600;}
+
+table.ann-tbl{width:100%;border-collapse:collapse;}
+.ann-tbl thead th{padding:10px 14px;background:#f9fbfc;font-size:.77rem;font-weight:700;color:#8a97a6;text-align:center;border-bottom:1px solid var(--bd);}
+.ann-tbl thead th:first-child{text-align:left;padding-left:32px;}
+.ann-tbl tbody td{padding:14px 14px;border-bottom:1px solid #f0f4f8;font-size:.85rem;color:#4b5968;text-align:center;vertical-align:middle;}
+.ann-tbl tbody td:first-child{text-align:left;padding-left:32px;}
+.ann-tbl tbody tr:hover{background:#f7fbff;}
+.ann-tbl tbody tr:last-child td{border-bottom:none;}
+.ann-title-lnk{display:flex;align-items:center;gap:7px;font-size:.87rem;font-weight:600;color:#1a2332;text-decoration:none;}
+.ann-title-lnk:hover{color:#0284C7;}
+.abg{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:700;}
+.abg.new{background:#FEE2E2;color:#991B1B;}
+.abg.rec{background:#DCFCE7;color:#166534;}
+.abg.rev{background:#FEF9C3;color:#92400E;}
+.abg.cls{background:#f0f4f8;color:#8a97a6;}
+.prog-t{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.71rem;font-weight:600;}
+.pt-a{background:#EFF6FF;color:#0284C7;}
+.pt-b{background:#E6F9F0;color:#1AA065;}
+.pt-c{background:#F3E8FF;color:#7C3AED;}
+.act-btn{padding:5px 13px;border-radius:6px;font-size:.77rem;font-weight:700;font-family:inherit;cursor:pointer;border:none;background:#0EA5E9;color:#fff;}
+.act-btn.out{background:#fff;border:1.5px solid #0EA5E9;color:#0284C7;}
+.act-btn.dis{background:#f0f4f8;color:#8a97a6;cursor:default;border:none;}
+
+.pagination{display:flex;justify-content:center;gap:4px;padding:18px;}
+.pg{width:31px;height:31px;border-radius:6px;border:1px solid var(--bd);background:#fff;font-size:.81rem;color:#4b5968;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:inherit;transition:all .15s;}
+.pg.on{background:#0EA5E9;border-color:#0EA5E9;color:#fff;font-weight:700;}
+.pg:hover:not(.on){border-color:#0EA5E9;color:#0284C7;}
+
+/* ─── 주제 제안 CTA ─── */
+.proposal{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px dashed #BAE6FD;border-radius:var(--r2);padding:26px 30px;display:flex;align-items:center;gap:28px;margin-bottom:28px;}
+.prop-icon{width:76px;height:76px;border-radius:18px;background:linear-gradient(135deg,#0EA5E9,#0284C7);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;box-shadow:0 5px 18px rgba(14,165,233,.3);}
+.prop-body h3{font-size:1.1rem;font-weight:800;color:#1a2332;margin-bottom:5px;}
+.prop-body p{font-size:.87rem;color:#4b5968;line-height:1.72;}
+.prop-btns{display:flex;gap:9px;flex-shrink:0;}
+.bp{padding:11px 22px;border-radius:8px;background:#0EA5E9;border:none;color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 3px 10px rgba(14,165,233,.28);}
+.bp:hover{background:#0284C7;transform:translateY(-1px);}
+.bo{padding:11px 22px;border-radius:8px;background:#fff;border:1.5px solid #0EA5E9;color:#0284C7;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;}
+.bo:hover{background:#EFF6FF;}
+
+/* ─── 취창업 지원 ─── */
+.support-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;margin-bottom:28px;box-shadow:var(--sh);}
+.support-hd-bar{background:linear-gradient(90deg,#7C3AED,#6D28D9);padding:18px 28px;display:flex;align-items:center;gap:14px;}
+.support-hd-bar h3{font-size:1.02rem;font-weight:800;color:#fff;}
+.support-hd-bar p{font-size:.82rem;color:rgba(255,255,255,.7);margin-top:2px;}
+.support-hd-icon{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.support-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:none;}
+.support-item{padding:22px 24px;border-right:1px solid var(--bd);}
+.support-item:last-child{border-right:none;}
+.si-icon{font-size:1.6rem;margin-bottom:10px;}
+.si-title{font-size:.9rem;font-weight:700;color:#1a2332;margin-bottom:6px;}
+.si-desc{font-size:.81rem;color:#4b5968;line-height:1.7;}
+.si-tag{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700;background:#F3E8FF;color:#7C3AED;}
+
+/* ─── Results ─── */
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.rc{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);transition:all .2s;cursor:default;}
+.rc:hover{transform:translateY(-3px);box-shadow:var(--sh2);}
+.rc-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative;}
+.rc-thumb.b{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);}
+.rc-thumb.v{background:linear-gradient(135deg,#F3E8FF,#E9D5FF);}
+.rc-thumb.g{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);}
+.rc-ttag{position:absolute;top:10px;left:10px;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.92);}
+.rc-body{padding:16px 18px;}
+.rc-title{font-size:.88rem;font-weight:700;color:#1a2332;line-height:1.42;margin-bottom:6px;}
+.rc-desc{font-size:.79rem;color:#4b5968;line-height:1.62;margin-bottom:11px;}
+.rc-meta{display:flex;justify-content:space-between;align-items:center;}
+.rc-date{font-size:.71rem;color:#8a97a6;}
+.rc-res{font-size:.74rem;font-weight:700;color:#0284C7;background:#EFF6FF;padding:2px 8px;border-radius:8px;}
+
+/* ─── FOOTER ─── */
+.footer{background:#1a2332;padding:26px 0;}
+.footer-inner{max-width:1380px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.flogo{display:flex;align-items:center;gap:11px;}
+.flogo-box{width:38px;height:38px;background:#2DBE7C;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.1rem;}
+.flogo-txt{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.85);}
+.flogo-sub{font-size:.68rem;color:rgba(255,255,255,.4);}
+.finfo{font-size:.76rem;color:rgba(255,255,255,.4);line-height:1.8;}
+.flinks{display:flex;gap:14px;}
+.flinks a{font-size:.78rem;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s;}
+.flinks a:hover{color:#2DBE7C;}
+
+.pnote{background:#FFFDE7;border-left:3px solid #F59E0B;border-radius:0 7px 7px 0;padding:10px 14px;font-size:.79rem;color:#78350F;margin:14px 0;line-height:1.72;}
+.pnote strong{font-weight:700;}
+.sec-block{margin-bottom:28px;}
+</style>
+<script src="include.js" defer></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════ GNB ══════════════════════════════ -->
+<header class="gnb"></header>
+
+<!-- ══════════════════════════════ PAGE BAR ══════════════════════════════ -->
+<div class="page-bar">
+  <div class="page-bar-inner">
+    <div class="breadcrumb">
+      <a href="#">홈</a><span class="sep">›</span>
+      <a href="#">시민참여</a><span class="sep">›</span>
+      <span class="cur">오픈랩</span>
+    </div>
+    <div class="page-bar-title">🔬 오픈랩</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ CONTENT ══════════════════════════════ -->
+<div class="content">
+
+  <!-- Anchor Nav -->
+  <nav class="anchor-nav">
+    <div class="anchor-nav-inner">
+      <div class="anchor-item active"><a href="#intro">오픈랩 소개</a></div>
+      <div class="anchor-sep"></div>
+      <div class="anchor-item"><a href="#programs">프로그램 유형</a></div>
+      <div class="anchor-sep"></div>
+      <div class="anchor-item"><a href="#process">추진 절차</a></div>
+      <div class="anchor-sep"></div>
+      <div class="anchor-item"><a href="#schedule">운영 일정</a></div>
+      <div class="anchor-sep"></div>
+      <div class="anchor-item"><a href="#announce">공고 목록</a></div>
+      <div class="anchor-sep"></div>
+      <div class="anchor-item"><a href="#proposal">주제 제안</a></div>
+      <div class="anchor-sep"></div>
+      <div class="anchor-item"><a href="#support">취창업 지원</a></div>
+    </div>
+  </nav>
+
+  <!-- 공지 배너 -->
+  <div class="notice-bar">
+    <span class="notice-tag">📢 공지</span>
+    <span class="notice-txt">2026년 제1기 오픈랩 데이터 분석 챌린지가 공모를 시작합니다. 광명시 탄소중립 데이터로 혁신 아이디어를 제안하세요.</span>
+    <span class="notice-date">26.03.10</span>
+  </div>
+
+  <!-- ── 핵심 통계 ── -->
+  <div class="stats-row" id="intro">
+    <div class="stat-card">
+      <div class="stat-card-icon sci-b">🔬</div>
+      <div><div class="stat-num">24<em>건</em></div><div class="stat-lbl">누적 오픈랩 과제</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon sci-g">🏢</div>
+      <div><div class="stat-num">38<em>개</em></div><div class="stat-lbl">참여 기업·기관</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon sci-y">💡</div>
+      <div><div class="stat-num">156<em>건</em></div><div class="stat-lbl">누적 아이디어 제안</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon sci-v">🎓</div>
+      <div><div class="stat-num">12<em>명</em></div><div class="stat-lbl">취창업 연계 성공</div></div>
+    </div>
+  </div>
+
+  <!-- ── 오픈랩 소개 ── -->
+  <div class="sec-hd">
+    <div class="sec-hd-left">
+      <span class="sec-tag blue">🔬 OPEN LAB</span>
+      <div><h2>오픈랩 소개</h2><p>데이터로 여는 광명시 혁신 창업 실험실</p></div>
+    </div>
+  </div>
+
+  <div class="intro-card">
+    <div class="intro-grid">
+      <div class="intro-main">
+        <div class="intro-badge">🚀 Open Lab</div>
+        <h3>광명시 데이터로<br>혁신을 <em>실험</em>하다</h3>
+        <p>
+          오픈랩은 광명시 스마트도시 데이터를 기반으로 시민·스타트업·연구자가 함께 혁신 아이디어를 발굴하고 실증하는 개방형 혁신 프로그램입니다. 
+          탄소중립 4대 마일 데이터를 자유롭게 분석하고, 비즈니스 모델로 발전시킬 수 있는 전 과정을 지원합니다.
+          우수 팀에게는 취·창업 연계 및 광명시 실증 사업 참여 기회가 제공됩니다.
+        </p>
+        <div class="kw-list">
+          <span class="kw">🏙 도시 데이터 활용</span>
+          <span class="kw">🚀 스타트업 실증</span>
+          <span class="kw">📊 데이터 챌린지</span>
+          <span class="kw">💼 취창업 연계</span>
+          <span class="kw">🤝 산학관 협력</span>
+          <span class="kw">🌱 탄소중립 혁신</span>
+        </div>
+      </div>
+      <div class="intro-visual">
+        <div class="cycle-title">오픈랩 운영 단계</div>
+        <div class="ol-diagram">
+          <div class="ol-stages">
+            <div class="ol-stage">
+              <div class="ol-stage-icon">💡</div>
+              <div><div class="ol-stage-nm">아이디어 발굴</div><div class="ol-stage-d">데이터 기반 과제 탐색 및 제안</div></div>
+              <div class="ol-stage-num">①</div>
+            </div>
+            <div class="ol-stage">
+              <div class="ol-stage-icon">⚗️</div>
+              <div><div class="ol-stage-nm">PoC 실증</div><div class="ol-stage-d">소규모 실증·프로토타입 개발</div></div>
+              <div class="ol-stage-num">②</div>
+            </div>
+            <div class="ol-stage">
+              <div class="ol-stage-icon">📈</div>
+              <div><div class="ol-stage-nm">스케일업</div><div class="ol-stage-d">성과 검증 및 사업화 연계</div></div>
+              <div class="ol-stage-num">③</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="intro-bottom">
+      <div class="ib-item"><div class="ib-icon">🔬</div><div><div class="ib-val">24<span>건</span></div><div class="ib-lbl">누적 과제</div></div></div>
+      <div class="ib-item"><div class="ib-icon">🏢</div><div><div class="ib-val">38<span>개사</span></div><div class="ib-lbl">참여 기업·기관</div></div></div>
+      <div class="ib-item"><div class="ib-icon">💡</div><div><div class="ib-val">156<span>건</span></div><div class="ib-lbl">아이디어 제안</div></div></div>
+      <div class="ib-item"><div class="ib-icon">🎓</div><div><div class="ib-val">12<span>명</span></div><div class="ib-lbl">취창업 연계</div></div></div>
+    </div>
+  </div>
+
+  <!-- ── 프로그램 유형 ── -->
+  <div class="sec-block" id="programs">
+    <div class="sec-hd">
+      <div class="sec-hd-left">
+        <span class="sec-tag blue">📦 PROGRAMS</span>
+        <div><h2>오픈랩 프로그램 유형</h2><p>목적에 맞는 프로그램을 선택하세요</p></div>
+      </div>
+    </div>
+    <div class="prog-grid">
+      <div class="prog-card">
+        <div class="prog-card-icon bl">🏆</div>
+        <h4>데이터 챌린지</h4>
+        <p>광명시 스마트도시 데이터를 활용하여 탄소중립 관련 분석·시각화·모델링 아이디어를 공모하는 경진대회형 프로그램입니다.</p>
+        <span class="prog-tag">연 2회 공모</span>
+      </div>
+      <div class="prog-card">
+        <div class="prog-card-icon gr">🤝</div>
+        <h4>협업 PoC 실증</h4>
+        <p>선정된 스타트업·연구팀이 광명시 실증 환경에서 소규모 프로토타입을 개발하고 실제 데이터로 효과를 검증하는 프로그램입니다.</p>
+        <span class="prog-tag g">수시 모집</span>
+      </div>
+      <div class="prog-card">
+        <div class="prog-card-icon or">💼</div>
+        <h4>취창업 지원 연계</h4>
+        <p>오픈랩 우수 팀을 대상으로 광명시 창업 생태계와 연계하여 멘토링·투자 연결·공공데이터 활용 창업 지원을 제공합니다.</p>
+        <span class="prog-tag v">연중 상시</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 추진 절차 ── -->
+  <div class="process-card" id="process">
+    <div class="sec-hd" style="margin-bottom:0">
+      <div class="sec-hd-left">
+        <span class="sec-tag blue">📋 PROCESS</span>
+        <div><h2>추진 절차</h2><p>공모 신청부터 성과 사업화까지 5단계</p></div>
+      </div>
+    </div>
+    <div class="proc-steps">
+      <div class="ps"><div class="ps-circle"><span class="ps-num">1</span>📢</div><div class="ps-lbl">과제 공모</div><div class="ps-sub">공고 등록<br>신청 접수</div></div>
+      <div class="ps"><div class="ps-circle"><span class="ps-num">2</span>🗂</div><div class="ps-lbl">제안 심사</div><div class="ps-sub">서류·발표<br>심사 평가</div></div>
+      <div class="ps"><div class="ps-circle"><span class="ps-num">3</span>⚗️</div><div class="ps-lbl">PoC 실증</div><div class="ps-sub">프로토타입<br>실증 개발</div></div>
+      <div class="ps"><div class="ps-circle"><span class="ps-num">4</span>📊</div><div class="ps-lbl">성과 발표</div><div class="ps-sub">결과 발표<br>우수팀 선정</div></div>
+      <div class="ps"><div class="ps-circle"><span class="ps-num">5</span>🚀</div><div class="ps-lbl">사업화 연계</div><div class="ps-sub">취창업 연계<br>확산 지원</div></div>
+    </div>
+  </div>
+
+  <!-- ── 운영 일정 ── -->
+  <div class="schedule-card" id="schedule">
+    <div class="sch-hd">
+      <div class="sec-hd" style="margin-bottom:0">
+        <div class="sec-hd-left">
+          <span class="sec-tag blue">📅 SCHEDULE</span>
+          <div><h2>운영 일정</h2><p>2026년 오픈랩 주요 일정을 확인하세요</p></div>
+        </div>
+      </div>
+      <div class="yr-tabs">
+        <div class="yr-tab">2025년</div>
+        <div class="yr-tab active">2026년</div>
+      </div>
+    </div>
+    <div class="sch-body">
+      <div class="tl">
+        <div class="tl-hdr">
+          <div></div>
+          <div class="tl-m">1월</div><div class="tl-m">2월</div><div class="tl-m now">3월</div><div class="tl-m">4월</div>
+          <div class="tl-m">5월</div><div class="tl-m">6월</div><div class="tl-m">7월</div><div class="tl-m">8월</div>
+          <div class="tl-m">9월</div><div class="tl-m">10월</div><div class="tl-m">11월</div><div class="tl-m">12월</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-lbl"><span class="dot" style="background:#0EA5E9"></span>데이터 챌린지 (1차)</div>
+          <div style="grid-column:span 2"><div class="tl-bar bar-gray">기획·준비</div></div>
+          <div style="grid-column:span 2"><div class="tl-bar bar-o">공모·접수</div></div>
+          <div style="grid-column:span 2"><div class="tl-bar bar-b">심사·발표</div></div>
+          <div style="grid-column:span 6"></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-lbl"><span class="dot" style="background:#8B5CF6"></span>데이터 챌린지 (2차)</div>
+          <div style="grid-column:span 6"></div>
+          <div style="grid-column:span 2"><div class="tl-bar bar-o">공모·접수</div></div>
+          <div style="grid-column:span 2"><div class="tl-bar bar-b">심사·발표</div></div>
+          <div style="grid-column:span 2"></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-lbl"><span class="dot" style="background:#2DBE7C"></span>협업 PoC 실증</div>
+          <div style="grid-column:span 3"><div class="tl-bar bar-o">모집·선정</div></div>
+          <div style="grid-column:span 6"><div class="tl-bar bar-g">PoC 실증 운영</div></div>
+          <div style="grid-column:span 3"><div class="tl-bar bar-b">성과 검증·발표</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-lbl"><span class="dot" style="background:#F59E0B"></span>취창업 지원</div>
+          <div style="grid-column:span 12"><div class="tl-bar bar-o" style="opacity:.55">연중 상시 접수</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-lbl"><span class="dot" style="background:#0EA5E9"></span>주제 제안</div>
+          <div style="grid-column:span 12"><div class="tl-bar bar-b" style="opacity:.55">상시 접수</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 공고 목록 ── -->
+  <div class="announce-card" id="announce">
+    <div class="ann-hd">
+      <div class="sec-hd" style="margin-bottom:0">
+        <div class="sec-hd-left">
+          <span class="sec-tag blue">📋 ANNOUNCEMENT</span>
+          <div><h2>공고 목록</h2><p>현재 모집 중인 오픈랩 프로그램을 확인하고 신청하세요</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="filter-row">
+      <button class="fb on">전체</button>
+      <button class="fb">모집 중</button>
+      <button class="fb">검토 중</button>
+      <button class="fb">완료</button>
+      <div class="fsep"></div>
+      <button class="fb">🏆 챌린지</button>
+      <button class="fb">🤝 협업 PoC</button>
+      <button class="fb">💼 취창업</button>
+      <div class="fsearch">
+        <input class="si" type="text" placeholder="프로그램명, 키워드 검색">
+        <button class="sb">검색</button>
+      </div>
+    </div>
+    <table class="ann-tbl">
+      <thead>
+        <tr>
+          <th>공고 제목</th><th>프로그램 유형</th><th>신청기간</th><th>모집규모</th><th>상태</th><th>신청</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#" class="ann-title-lnk"><span class="abg new">NEW</span>2026 광명시 탄소중립 데이터 챌린지 (1차) — 에너지·모빌리티 분야</a></td>
+          <td><span class="prog-t pt-a">🏆 챌린지</span></td>
+          <td>26.03.10 ~ 04.10</td><td>팀 단위 (1~5인)</td>
+          <td><span class="abg rec">모집 중</span></td>
+          <td><button class="act-btn">신청하기</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="ann-title-lnk">스마트 모빌리티 데이터 활용 PoC 실증팀 모집 (전기버스 DRT 최적화)</a></td>
+          <td><span class="prog-t pt-b">🤝 협업 PoC</span></td>
+          <td>26.02.20 ~ 03.25</td><td>3개 팀</td>
+          <td><span class="abg rec">모집 중</span></td>
+          <td><button class="act-btn">신청하기</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="ann-title-lnk">탄소중립 IoT 솔루션 창업팀 멘토링 및 실증 지원 (세이프티 마일)</a></td>
+          <td><span class="prog-t pt-c">💼 취창업</span></td>
+          <td>26.02.01 ~ 03.15</td><td>5개 팀</td>
+          <td><span class="abg rev">검토 중</span></td>
+          <td><button class="act-btn out">결과 대기</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="ann-title-lnk">광명시 에너지 데이터 기반 AI 예측 모델 개발 챌린지 (2025 결과 공개)</a></td>
+          <td><span class="prog-t pt-a">🏆 챌린지</span></td>
+          <td>25.10.01 ~ 11.30</td><td>-</td>
+          <td><span class="abg cls">완료</span></td>
+          <td><button class="act-btn dis">종료됨</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="ann-title-lnk">다회용기 배달 확산 데이터 분석 PoC — 배달의민족 연계</a></td>
+          <td><span class="prog-t pt-b">🤝 협업 PoC</span></td>
+          <td>25.08.01 ~ 09.30</td><td>-</td>
+          <td><span class="abg cls">완료</span></td>
+          <td><button class="act-btn dis">종료됨</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button class="pg">‹</button>
+      <button class="pg on">1</button>
+      <button class="pg">2</button>
+      <button class="pg">3</button>
+      <button class="pg">›</button>
+    </div>
+  </div>
+
+  <!-- ── 주제 제안 CTA ── -->
+  <div class="proposal" id="proposal">
+    <div class="prop-icon">💡</div>
+    <div class="prop-body">
+      <h3>오픈랩 주제를 직접 제안해 보세요!</h3>
+      <p>광명시 스마트도시 데이터를 활용하여 해결하고 싶은 문제나 사업화 아이디어가 있으신가요?<br>
+      우수 제안은 다음 오픈랩 공모 과제로 채택되며, 데이터 접근·실증 환경이 지원됩니다.</p>
+    </div>
+    <div class="prop-btns">
+      <button class="bp">✏️ 주제 제안하기</button>
+      <button class="bo">📋 나의 제안 현황</button>
+    </div>
+  </div>
+
+  <!-- ── 취창업 지원 ── -->
+  <div class="support-card" id="support">
+    <div class="support-hd-bar">
+      <div class="support-hd-icon">💼</div>
+      <div>
+        <h3>취창업 지원 프로그램</h3>
+        <p>오픈랩 연계 취업·창업 지원 정보 및 신청</p>
+      </div>
+    </div>
+    <div class="support-grid">
+      <div class="support-item">
+        <div class="si-icon">🎯</div>
+        <div class="si-title">스타트업 멘토링</div>
+        <div class="si-desc">탄소중립·스마트시티 분야 전문가 멘토와 1:1 매칭. 비즈니스 모델 검증부터 투자 유치까지 단계별 지원을 제공합니다.</div>
+        <span class="si-tag">월 2회 정기 진행</span>
+      </div>
+      <div class="support-item">
+        <div class="si-icon">🏢</div>
+        <div class="si-title">광명시 공공 데이터 활용 창업</div>
+        <div class="si-desc">광명시 데이터허브(488건) 및 경기도 데이터허브(40건) 연계 데이터를 우선 제공. 광명시 실증 사업 참여 기회를 부여합니다.</div>
+        <span class="si-tag">수시 신청</span>
+      </div>
+      <div class="support-item">
+        <div class="si-icon">💰</div>
+        <div class="si-title">투자·IR 연계</div>
+        <div class="si-desc">오픈랩 우수 팀을 대상으로 경기도 창업 생태계 네트워크와 연결하여 시드 투자 및 IR 피칭 기회를 제공합니다.</div>
+        <span class="si-tag">연 1회 데모데이</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 성과 사례 ── -->
+  <div class="sec-block" id="results">
+    <div class="sec-hd">
+      <div class="sec-hd-left">
+        <span class="sec-tag blue">✅ RESULTS</span>
+        <div><h2>오픈랩 주요 성과</h2><p>완료된 오픈랩 프로그램의 실증 결과</p></div>
+      </div>
+      <a href="#" class="sec-more">전체 보기 →</a>
+    </div>
+    <div class="results-grid">
+      <div class="rc">
+        <div class="rc-thumb b"><span class="rc-ttag" style="color:#0284C7">🏆 챌린지</span>🤖</div>
+        <div class="rc-body">
+          <div class="rc-title">에너지 사용량 AI 예측 모델 챌린지</div>
+          <div class="rc-desc">태양광 발전 데이터와 기상 데이터를 결합한 AI 예측 모델 개발, 최우수팀 창업 연계</div>
+          <div class="rc-meta"><span class="rc-date">2025.11 완료</span><span class="rc-res">예측 정확도 94.2%</span></div>
+        </div>
+      </div>
+      <div class="rc">
+        <div class="rc-thumb v"><span class="rc-ttag" style="color:#7C3AED">🤝 협업 PoC</span>🚗</div>
+        <div class="rc-body">
+          <div class="rc-title">카셰어링 수요 예측 PoC 실증</div>
+          <div class="rc-desc">전기차 카셰어링 이용 데이터 기반 최적 배치 알고리즘 개발 및 광명시 현장 적용</div>
+          <div class="rc-meta"><span class="rc-date">2025.09 완료</span><span class="rc-res">이용률 ▲ 23%</span></div>
+        </div>
+      </div>
+      <div class="rc">
+        <div class="rc-thumb g"><span class="rc-ttag" style="color:#1AA065">💼 취창업</span>🌱</div>
+        <div class="rc-body">
+          <div class="rc-title">탄소거래 플랫폼 스타트업 창업 지원</div>
+          <div class="rc-desc">광명시 탄소거래 데이터를 활용한 B2B 탄소감축 분석 서비스 스타트업 창업 및 시드 투자 연계</div>
+          <div class="rc-meta"><span class="rc-date">2025.10 완료</span><span class="rc-res">시드 투자 유치</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<footer class="footer"></footer>
+
+<script>
+const anchorItems = document.querySelectorAll('.anchor-item');
+const sections = ['intro','programs','process','schedule','announce','proposal','support'];
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  });
+  anchorItems.forEach((item, i) => {
+    item.classList.toggle('active', sections[i] === current || (current === '' && i === 0));
+  });
+});
+</script>
+</body>
+</html>

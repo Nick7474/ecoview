@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>에코뷰 | 탄소중립 - 탄소감축 현황</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;scroll-behavior:smooth;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f4f8fb;color:#1a2332;}
+:root{
+  --p:#2DBE7C;--pd:#1AA065;--pl:#E6F9F0;--pm:#C0EDD8;
+  --op:#0EA5E9;--opd:#0284C7;--opl:#EFF6FF;
+  --t1:#1a2332;--t2:#4b5968;--t3:#8a97a6;
+  --bd:#E2EAF0;--bg:#f4f8fb;--wh:#fff;
+  --sh:0 2px 12px rgba(0,0,0,.08);--sh2:0 6px 24px rgba(0,0,0,.12);
+  --r:10px;--r2:16px;
+}
+.gnb{background:#fff;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:500;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.gnb-wrap{max-width:1380px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:62px;}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;margin-right:36px;}
+.logo-box{width:34px;height:34px;background:linear-gradient(135deg,#2DBE7C,#1AA065);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.05rem;}
+.logo-txt{font-size:1.18rem;font-weight:800;letter-spacing:-.03em;}
+.logo-txt .e{color:#2DBE7C;}.logo-txt .v{color:#1a2332;}
+.gnb-nav{display:flex;list-style:none;height:62px;flex:1;}
+.gnb-nav>li{position:relative;height:100%;}
+.gnb-nav>li>a{display:flex;align-items:center;height:100%;padding:0 18px;font-size:.9rem;font-weight:600;color:#4b5968;text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;}
+.gnb-nav>li>a:hover,.gnb-nav>li.active>a{color:#1AA065;border-bottom-color:#2DBE7C;}
+.gnb-nav>li:hover .dropdown{opacity:1;pointer-events:auto;transform:translateY(0);}
+.dropdown{position:absolute;top:calc(100% + 1px);left:0;min-width:200px;background:#fff;border:1px solid var(--bd);border-top:2px solid #2DBE7C;border-radius:0 0 12px 12px;box-shadow:0 8px 28px rgba(0,0,0,.12);padding:8px 0;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s;z-index:600;}
+.dropdown li{list-style:none;}
+.dropdown li a{display:flex;align-items:center;gap:8px;padding:9px 20px;font-size:.85rem;color:#4b5968;text-decoration:none;transition:background .15s,color .15s;}
+.dropdown li a:hover{background:#E6F9F0;color:#1AA065;}
+.dropdown li.dd-active a{color:#1AA065;font-weight:700;}
+.gnb-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto;}
+.btn-sm{padding:6px 15px;border-radius:7px;font-size:.82rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;}
+.btn-ghost{border:1.5px solid var(--bd);background:#fff;color:#4b5968;}
+.btn-ghost:hover{border-color:#2DBE7C;color:#1AA065;}
+.btn-fill{border:none;background:#2DBE7C;color:#fff;}
+.btn-fill:hover{background:#1AA065;}
+.page-bar{height:52px;display:flex;align-items:center;}
+.page-bar-inner{max-width:1380px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;width:100%;}
+.breadcrumb{display:flex;align-items:center;gap:7px;}
+.breadcrumb a,.breadcrumb span{font-size:.82rem;color:rgba(255,255,255,.75);text-decoration:none;}
+.breadcrumb .sep{color:rgba(255,255,255,.4);font-size:.75rem;}
+.breadcrumb .cur{color:#fff;font-weight:700;}
+.page-bar-title{font-size:1rem;font-weight:800;color:#fff;}
+.content{max-width:1380px;margin:0 auto;padding:36px 32px 72px;}
+.anchor-nav{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);margin-bottom:32px;overflow:hidden;box-shadow:var(--sh);}
+.anchor-nav-inner{display:flex;align-items:center;}
+.anchor-item{flex:1;text-align:center;}
+.anchor-item a{display:block;padding:14px 8px;font-size:.86rem;font-weight:600;color:#4b5968;text-decoration:none;border-bottom:3px solid transparent;transition:all .2s;}
+.anchor-item.active a{color:#1AA065;border-bottom-color:#2DBE7C;background:#f0fdf7;font-weight:700;}
+.anchor-item a:hover{color:#1AA065;background:#f0fdf7;}
+.anchor-sep{width:1px;height:40px;background:#E2EAF0;flex-shrink:0;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+.stat-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);padding:22px 24px;display:flex;align-items:center;gap:16px;box-shadow:var(--sh);}
+.stat-card-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;}
+.sci-g{background:#E6F9F0;}.sci-b{background:#EFF6FF;}.sci-y{background:#FFFBEB;}.sci-r{background:#FEE2E2;}.sci-v{background:#F3E8FF;}
+.stat-num{font-size:1.7rem;font-weight:900;color:#1a2332;letter-spacing:-.04em;line-height:1;}
+.stat-num em{font-size:1rem;font-weight:600;color:#8a97a6;font-style:normal;}
+.stat-lbl{font-size:.75rem;color:#8a97a6;margin-top:3px;}
+.sec-hd{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+.sec-hd-left{display:flex;align-items:center;gap:10px;}
+.sec-tag{font-size:.73rem;font-weight:700;padding:3px 11px;border-radius:20px;letter-spacing:.03em;white-space:nowrap;}
+.sec-tag.green{background:#E6F9F0;color:#1AA065;}
+.sec-tag.blue{background:#EFF6FF;color:#0284C7;}
+.sec-tag.orange{background:#FEF3C7;color:#92400E;}
+.sec-tag.purple{background:#F3E8FF;color:#7C3AED;}
+.sec-tag.red{background:#FEE2E2;color:#991B1B;}
+.sec-tag.gray{background:#f0f4f8;color:#4b5968;}
+.sec-hd h2{font-size:1.28rem;font-weight:800;color:#1a2332;letter-spacing:-.03em;}
+.sec-hd p{font-size:.82rem;color:#8a97a6;margin-top:2px;}
+.sec-more{font-size:.83rem;font-weight:600;text-decoration:none;color:#1AA065;}
+.sec-more:hover{text-decoration:underline;}
+.sec-block{margin-bottom:28px;}
+.notice-bar{border-radius:var(--r);padding:13px 22px;display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.notice-tag{color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;flex-shrink:0;}
+.notice-txt{font-size:.87rem;color:rgba(255,255,255,.88);flex:1;}
+.notice-date{font-size:.77rem;color:rgba(255,255,255,.45);}
+.card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);box-shadow:var(--sh);}
+.pagination{display:flex;justify-content:center;gap:4px;padding:18px;}
+.pg{width:31px;height:31px;border-radius:6px;border:1px solid var(--bd);background:#fff;font-size:.81rem;color:#4b5968;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:inherit;transition:all .15s;}
+.pg.on{background:#2DBE7C;border-color:#2DBE7C;color:#fff;font-weight:700;}
+.pg:hover:not(.on){border-color:#2DBE7C;color:#1AA065;}
+table.tbl{width:100%;border-collapse:collapse;}
+.tbl thead th{padding:10px 14px;background:#f9fbfc;font-size:.77rem;font-weight:700;color:#8a97a6;text-align:center;border-bottom:1px solid var(--bd);}
+.tbl thead th:first-child{text-align:left;padding-left:32px;}
+.tbl tbody td{padding:14px 14px;border-bottom:1px solid #f0f4f8;font-size:.85rem;color:#4b5968;text-align:center;vertical-align:middle;}
+.tbl tbody td:first-child{text-align:left;padding-left:32px;}
+.tbl tbody tr:hover{background:#fafcff;}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.abg{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:700;}
+.abg.new{background:#FEE2E2;color:#991B1B;}
+.abg.rec{background:#DCFCE7;color:#166534;}
+.abg.rev{background:#FEF9C3;color:#92400E;}
+.abg.cls{background:#f0f4f8;color:#8a97a6;}
+.abg.done{background:#E6F9F0;color:#1AA065;}
+.title-lnk{font-size:.87rem;font-weight:600;color:#1a2332;text-decoration:none;}
+.title-lnk:hover{color:#1AA065;}
+.act-btn{padding:5px 13px;border-radius:6px;font-size:.77rem;font-weight:700;font-family:inherit;cursor:pointer;border:none;background:#2DBE7C;color:#fff;}
+.act-btn.out{background:#fff;border:1.5px solid #2DBE7C;color:#1AA065;}
+.act-btn.dis{background:#f0f4f8;color:#8a97a6;cursor:default;border:none;}
+.filter-row{display:flex;align-items:center;gap:8px;padding:14px 22px;border-bottom:1px solid var(--bd);flex-wrap:wrap;}
+.fb{padding:6px 13px;border-radius:20px;font-size:.79rem;font-weight:600;border:1.5px solid var(--bd);background:#fff;color:#4b5968;cursor:pointer;font-family:inherit;transition:all .15s;}
+.fb.on{background:#2DBE7C;border-color:#2DBE7C;color:#fff;}
+.fb:hover:not(.on){border-color:#2DBE7C;color:#1AA065;}
+.fsep{width:1px;height:20px;background:#E2EAF0;flex-shrink:0;}
+.fsearch{margin-left:auto;display:flex;gap:6px;}
+.si{padding:7px 13px;border-radius:7px;border:1.5px solid var(--bd);font-size:.81rem;font-family:inherit;color:#1a2332;outline:none;width:190px;}
+.si:focus{border-color:#2DBE7C;}
+.sb{padding:7px 13px;border-radius:7px;background:#2DBE7C;border:none;color:#fff;font-size:.81rem;cursor:pointer;font-family:inherit;font-weight:600;}
+.intro-card{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);margin-bottom:28px;}
+.intro-grid{display:grid;grid-template-columns:1fr 340px;}
+.intro-main{padding:32px 36px;}
+.intro-badge{display:inline-flex;align-items:center;gap:6px;color:#fff;font-size:.73rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.intro-main h3{font-family:'Noto Serif KR',serif;font-size:1.55rem;font-weight:700;color:#1a2332;line-height:1.38;letter-spacing:-.03em;margin-bottom:14px;}
+.intro-main h3 em{font-style:normal;}
+.intro-main p{font-size:.9rem;color:#4b5968;line-height:1.88;margin-bottom:18px;}
+.kw-list{display:flex;flex-wrap:wrap;gap:8px;}
+.kw{padding:5px 13px;border-radius:20px;font-size:.77rem;font-weight:600;background:#fff;}
+.intro-visual{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:18px;position:relative;overflow:hidden;}
+.intro-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(45,190,124,.22) 0%,transparent 70%);}
+.intro-bottom{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--bd);}
+.ib-item{padding:18px 22px;border-right:1px solid var(--bd);display:flex;align-items:center;gap:13px;}
+.ib-item:last-child{border-right:none;}
+.ib-icon{width:40px;height:40px;border-radius:11px;background:#E6F9F0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.ib-val{font-size:1.22rem;font-weight:900;color:#1a2332;letter-spacing:-.03em;line-height:1;}
+.ib-val span{font-size:.78rem;font-weight:500;color:#8a97a6;}
+.ib-lbl{font-size:.73rem;color:#8a97a6;margin-top:2px;}
+.proposal{background:linear-gradient(135deg,#f0fdf7,#e6f9f2);border:1.5px dashed #C0EDD8;border-radius:var(--r2);padding:26px 30px;display:flex;align-items:center;gap:28px;margin-bottom:28px;}
+.prop-icon{width:76px;height:76px;border-radius:18px;background:linear-gradient(135deg,#2DBE7C,#1AA065);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;box-shadow:0 5px 18px rgba(45,190,124,.3);}
+.prop-body h3{font-size:1.1rem;font-weight:800;color:#1a2332;margin-bottom:5px;}
+.prop-body p{font-size:.87rem;color:#4b5968;line-height:1.72;}
+.prop-btns{display:flex;gap:9px;flex-shrink:0;}
+.bp{padding:11px 22px;border-radius:8px;background:#2DBE7C;border:none;color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.bp:hover{background:#1AA065;}
+.bo{padding:11px 22px;border-radius:8px;background:#fff;border:1.5px solid #2DBE7C;color:#1AA065;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.bo:hover{background:#E6F9F0;}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.rc{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);transition:all .2s;}
+.rc:hover{transform:translateY(-3px);box-shadow:var(--sh2);}
+.rc-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative;}
+.rc-thumb.g{background:linear-gradient(135deg,#E6F9F0,#C0EDD8);}
+.rc-thumb.b{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);}
+.rc-thumb.o{background:linear-gradient(135deg,#FEF3C7,#FDE68A);}
+.rc-thumb.v{background:linear-gradient(135deg,#F3E8FF,#DDD6FE);}
+.rc-thumb.r{background:linear-gradient(135deg,#FEE2E2,#FECACA);}
+.rc-ttag{position:absolute;top:10px;left:10px;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.92);}
+.rc-body{padding:16px 18px;}
+.rc-title{font-size:.88rem;font-weight:700;color:#1a2332;line-height:1.42;margin-bottom:6px;}
+.rc-desc{font-size:.79rem;color:#4b5968;line-height:1.62;margin-bottom:11px;}
+.rc-meta{display:flex;justify-content:space-between;align-items:center;}
+.rc-date{font-size:.71rem;color:#8a97a6;}
+.rc-res{font-size:.74rem;font-weight:700;color:#1AA065;background:#E6F9F0;padding:2px 8px;border-radius:8px;}
+.footer{background:#1a2332;padding:26px 0;}
+.footer-inner{max-width:1380px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;}
+.flogo{display:flex;align-items:center;gap:11px;}
+.flogo-box{width:38px;height:38px;background:#2DBE7C;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.1rem;}
+.flogo-txt{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.85);}
+.flogo-sub{font-size:.68rem;color:rgba(255,255,255,.4);margin-top:1px;}
+.finfo{font-size:.76rem;color:rgba(255,255,255,.4);line-height:1.8;}
+.flinks{display:flex;gap:14px;}
+.flinks a{font-size:.78rem;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s;}
+.flinks a:hover{color:#2DBE7C;}
+.pnote{background:#FFFDE7;border-left:3px solid #F59E0B;border-radius:0 7px 7px 0;padding:10px 14px;font-size:.79rem;color:#78350F;margin:14px 0;line-height:1.72;}
+
+
+.reduction-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.yr-compare{background:#fff;border:1px solid var(--bd);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);}
+.yc-hd{background:linear-gradient(135deg,#0d2319,#133326);padding:18px 24px;}
+.yc-hd h4{font-size:.92rem;font-weight:800;color:#fff;}
+.yc-hd p{font-size:.74rem;color:rgba(255,255,255,.5);margin-top:3px;}
+.yc-body{padding:18px 22px;}
+.compare-row{display:flex;align-items:center;gap:14px;margin-bottom:13px;}
+.compare-yr{font-size:.78rem;font-weight:700;color:#8a97a6;width:38px;flex-shrink:0;}
+.compare-bar-wrap{flex:1;height:22px;background:#f0f4f8;border-radius:6px;overflow:hidden;position:relative;}
+.compare-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;}
+.compare-bar span{font-size:.73rem;font-weight:700;color:#fff;white-space:nowrap;}
+.compare-val{font-size:.82rem;font-weight:700;color:#1a2332;width:65px;text-align:right;flex-shrink:0;}
+.project-list{padding:0;}
+.proj-item{padding:16px 22px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:14px;}
+.proj-item:last-child{border-bottom:none;}
+.proj-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.proj-title{font-size:.87rem;font-weight:700;color:#1a2332;margin-bottom:3px;}
+.proj-desc{font-size:.75rem;color:#8a97a6;}
+.proj-val{font-size:1rem;font-weight:900;color:#1AA065;margin-left:auto;white-space:nowrap;}
+
+</style>
+<script src="include.js" defer></script>
+</head>
+<body>
+<header class="gnb"></header>
+
+<div class="page-bar" style="background:#1AA065;">
+  <div class="page-bar-inner">
+    <div class="breadcrumb">
+      <a href="index.html">홈</a><span class="sep">›</span>
+      <a href="#">탄소중립 스마트도시</a><span class="sep">›</span>
+      <span class="cur">탄소감축 현황</span>
+    </div>
+    <div class="page-bar-title">📉 탄소감축 현황</div>
+  </div>
+</div>
+<div class="content">
+
+  <nav class="anchor-nav"><div class="anchor-nav-inner">
+    <div class="anchor-item active"><a href="#overview">감축 개요</a></div><div class="anchor-sep"></div>
+    <div class="anchor-item"><a href="#yearly">연도별 추이</a></div><div class="anchor-sep"></div>
+    <div class="anchor-item"><a href="#projects">감축 사업</a></div><div class="anchor-sep"></div>
+    <div class="anchor-item"><a href="#citizen">시민 기여</a></div>
+  </div></nav>
+  <div class="stats-row" id="overview">
+    <div class="stat-card"><div class="stat-card-icon sci-g">📉</div><div><div class="stat-num">5,240<em>t</em></div><div class="stat-lbl">누적 탄소감축량 (CO₂)</div></div></div>
+    <div class="stat-card"><div class="stat-card-icon sci-b">🌱</div><div><div class="stat-num">18.4<em>%</em></div><div class="stat-lbl">2023년 대비 감축률</div></div></div>
+    <div class="stat-card"><div class="stat-card-icon sci-y">🏗</div><div><div class="stat-num">24<em>개</em></div><div class="stat-lbl">운영 중 감축 사업</div></div></div>
+    <div class="stat-card"><div class="stat-card-icon sci-v">👥</div><div><div class="stat-num">8,420<em>명</em></div><div class="stat-lbl">탄소중립 실천 시민</div></div></div>
+  </div>
+  <div class="reduction-grid">
+    <div class="yr-compare">
+      <div class="yc-hd"><h4>📊 연도별 탄소 배출량 비교</h4><p>기준연도 대비 감축 추이</p></div>
+      <div class="yc-body">
+        <div class="compare-row"><span class="compare-yr">2022</span><div class="compare-bar-wrap"><div class="compare-bar" style="width:100%;background:linear-gradient(90deg,#ef4444,#dc2626)"><span>기준연도</span></div></div><span class="compare-val">28,420t</span></div>
+        <div class="compare-row"><span class="compare-yr">2023</span><div class="compare-bar-wrap"><div class="compare-bar" style="width:95%;background:linear-gradient(90deg,#f97316,#ea580c)"><span>-5%</span></div></div><span class="compare-val">27,000t</span></div>
+        <div class="compare-row"><span class="compare-yr">2024</span><div class="compare-bar-wrap"><div class="compare-bar" style="width:88%;background:linear-gradient(90deg,#f59e0b,#d97706)"><span>-12%</span></div></div><span class="compare-val">25,010t</span></div>
+        <div class="compare-row"><span class="compare-yr" style="color:#2DBE7C">2025</span><div class="compare-bar-wrap"><div class="compare-bar" style="width:79%;background:linear-gradient(90deg,#2DBE7C,#1AA065)"><span>-21% ★</span></div></div><span class="compare-val" style="color:#1AA065">22,450t</span></div>
+        <div class="compare-row"><span class="compare-yr">2026(예)</span><div class="compare-bar-wrap"><div class="compare-bar" style="width:72%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"><span>-28%(목표)</span></div></div><span class="compare-val">20,460t</span></div>
+        <div class="pnote" style="margin-top:14px"><strong>2025년</strong> 탄소감축량 5,240tCO₂ 달성 — 목표(5,000t) 초과 달성 🎉</div>
+      </div>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <div style="padding:18px 22px 14px;border-bottom:1px solid var(--bd)"><h4 style="font-size:.92rem;font-weight:800;color:#1a2332">🏗 주요 감축 사업별 기여량</h4></div>
+      <div class="project-list">
+        <div class="proj-item"><div class="proj-icon" style="background:#FEF3C7">☀️</div><div><div class="proj-title">태양광 발전 확대</div><div class="proj-desc">아파트·공공건물 태양광 설치</div></div><span class="proj-val">1,840t</span></div>
+        <div class="proj-item"><div class="proj-icon" style="background:#DBEAFE">🚌</div><div><div class="proj-title">전기버스 전환</div><div class="proj-desc">CNG→전기버스 124대 전환</div></div><span class="proj-val">980t</span></div>
+        <div class="proj-item"><div class="proj-icon" style="background:#E6F9F0">🌳</div><div><div class="proj-title">도시숲 조성</div><div class="proj-desc">그린배리어·가로수 확대</div></div><span class="proj-val">620t</span></div>
+        <div class="proj-item"><div class="proj-icon" style="background:#F3E8FF">♻️</div><div><div class="proj-title">재활용률 향상</div><div class="proj-desc">다회용기·분리수거 확대</div></div><span class="proj-val">480t</span></div>
+        <div class="proj-item"><div class="proj-icon" style="background:#E6F9F0">👥</div><div><div class="proj-title">시민 탄소포인트</div><div class="proj-desc">절전·절수·친환경 행동</div></div><span class="proj-val">320t</span></div>
+      </div>
+    </div>
+  </div>
+  <!-- 시민 기여 -->
+  <div class="sec-block" id="citizen">
+    <div class="sec-hd"><div class="sec-hd-left"><span class="sec-tag green">👥 CITIZEN</span><div><h2>시민 탄소중립 실천 기여</h2><p>광명 시민의 일상 속 탄소감축 활동</p></div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+      <div class="card" style="padding:20px 22px;text-align:center"><div style="font-size:1.8rem;margin-bottom:8px">🚴</div><div style="font-size:1.2rem;font-weight:900;color:#1a2332;margin-bottom:4px">12,480<span style="font-size:.8rem;color:#8a97a6">회</span></div><div style="font-size:.77rem;color:#4b5968">친환경 이동수단 이용</div></div>
+      <div class="card" style="padding:20px 22px;text-align:center"><div style="font-size:1.8rem;margin-bottom:8px">💡</div><div style="font-size:1.2rem;font-weight:900;color:#1a2332;margin-bottom:4px">8,240<span style="font-size:.8rem;color:#8a97a6">kWh</span></div><div style="font-size:.77rem;color:#4b5968">절전 활동 절감량</div></div>
+      <div class="card" style="padding:20px 22px;text-align:center"><div style="font-size:1.8rem;margin-bottom:8px">♻️</div><div style="font-size:1.2rem;font-weight:900;color:#1a2332;margin-bottom:4px">4,820<span style="font-size:.8rem;color:#8a97a6">kg</span></div><div style="font-size:.77rem;color:#4b5968">다회용기 사용 절감량</div></div>
+      <div class="card" style="padding:20px 22px;text-align:center"><div style="font-size:1.8rem;margin-bottom:8px">🌱</div><div style="font-size:1.2rem;font-weight:900;color:#1a2332;margin-bottom:4px">2,340<span style="font-size:.8rem;color:#8a97a6">P</span></div><div style="font-size:.77rem;color:#4b5968">1인당 평균 탄소포인트</div></div>
+    </div>
+  </div>
+
+</div>
+<footer class="footer"></footer>
+<script>
+const anchorItems=document.querySelectorAll('.anchor-item');
+const sectionIds=[...document.querySelectorAll('[id]')].map(e=>e.id);
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sectionIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=120)cur=id;});
+  anchorItems.forEach((item,i)=>{const a=item.querySelector('a');if(a){const href=a.getAttribute('href').replace('#','');item.classList.toggle('active',href===cur||(cur===''&&i===0));}});
+});
+document.querySelectorAll('.fb').forEach(btn=>{
+  btn.addEventListener('click',function(){this.classList.toggle('on');});
+});
+
+</script>
+</body>
+</html>
