@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KEPCO Safety AI — 평가 내역</title>
+  <style>
+/* ============================================================
+   KEPCO Safety AI — 공통 디자인 시스템
+   Pretendard 폰트, 컬러 토큰, 컴포넌트 공통 스타일
+   ============================================================ */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
+
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+button { border: none; cursor: pointer; background: none; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; }
+img { display: block; max-width: 100%; }
+
+/* ── Design Tokens ──────────────────────────────────────── */
+:root {
+  /* Brand Colors */
+  --c-blue-900:   #002A5E;
+  --c-blue-800:   #003F7A;
+  --c-blue-700:   #004F96;
+  --c-blue:       #0056A0;
+  --c-blue-600:   #1565B8;
+  --c-blue-500:   #1A72C0;
+  --c-blue-400:   #4A96D1;
+  --c-blue-200:   #B8D4F5;
+  --c-blue-100:   #D6E9FB;
+  --c-blue-50:    #EAF3FF;
+  --c-sky:        #EAF3FF;
+
+  --c-teal:       #00897B;
+  --c-teal-light: #E0F4F2;
+
+  --c-navy:       #0D2B5E;
+
+  /* Risk Level Colors */
+  --c-critical:       #C62828;
+  --c-critical-bg:    #FFEBEE;
+  --c-critical-border:#FFCDD2;
+  --c-high:           #E64A19;
+  --c-high-bg:        #FBE9E7;
+  --c-high-border:    #FFCCBC;
+  --c-medium:         #F9A825;
+  --c-medium-bg:      #FFFDE7;
+  --c-medium-border:  #FFF176;
+  --c-low:            #2E7D32;
+  --c-low-bg:         #E8F5E9;
+  --c-low-border:     #C8E6C9;
+
+  /* Semantic Colors */
+  --c-success:        #2E7D32;
+  --c-success-bg:     #E8F5E9;
+  --c-success-border: #A5D6A7;
+  --c-warning:        #F57C00;
+  --c-warning-bg:     #FFF8E1;
+  --c-warning-border: #FFE082;
+  --c-danger:         #C62828;
+  --c-danger-bg:      #FFEBEE;
+  --c-info:           #0277BD;
+  --c-info-bg:        #E1F5FE;
+
+  /* Orange Accent */
+  --c-orange:         #F05A2A;
+  --c-orange-bg:      #FFF0EA;
+
+  /* Gray Scale */
+  --c-gray-50:  #F8F9FA;
+  --c-gray-100: #F1F3F5;
+  --c-gray-200: #E9ECEF;
+  --c-gray-300: #DEE2E6;
+  --c-gray-400: #CED4DA;
+  --c-gray-500: #ADB5BD;
+  --c-gray-600: #6C757D;
+  --c-gray-700: #495057;
+  --c-gray-800: #343A40;
+  --c-gray-900: #212529;
+  --c-white:    #FFFFFF;
+
+  /* Typography */
+  --font-base:  'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --fs-xs:   10px;
+  --fs-sm:   11px;
+  --fs-md:   12px;
+  --fs-base: 13px;
+  --fs-lg:   14px;
+  --fs-xl:   15px;
+  --fs-2xl:  16px;
+  --fs-3xl:  18px;
+  --fs-4xl:  20px;
+  --fs-5xl:  24px;
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+  --fw-extrabold:800;
+
+  --lh-tight:  1.3;
+  --lh-base:   1.5;
+  --lh-relaxed:1.7;
+
+  /* Spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* Border Radius */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   20px;
+  --r-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-sm: 0 1px 6px rgba(0,0,0,0.08);
+  --shadow-md: 0 2px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
+  --shadow-xl: 0 8px 40px rgba(0,0,0,0.16);
+
+  /* Border */
+  --border-base: 1px solid var(--c-gray-200);
+  --border-light: 1px solid var(--c-gray-100);
+  --border-focus: 1.5px solid var(--c-blue);
+
+  /* Transitions */
+  --transition: 0.18s ease;
+
+  /* Header Height */
+  --header-h: 56px;
+  --bottomnav-h: 64px;
+
+  /* App bg */
+  --app-bg: #F0F4F8;
+}
+
+/* ── Base Layout ────────────────────────────────────────── */
+body {
+  font-family: var(--font-base);
+  font-size: var(--fs-base);
+  color: var(--c-gray-800);
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: var(--c-white);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.screen-body {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--app-bg);
+  padding-bottom: var(--bottomnav-h);
+}
+
+.screen-body--white {
+  background: var(--c-white);
+}
+
+/* ── Top Header ─────────────────────────────────────────── */
+.top-header {
+  height: var(--header-h);
+  background: linear-gradient(135deg, var(--c-blue-800) 0%, var(--c-blue) 60%, var(--c-blue-500) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.header-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--c-white);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--c-white);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  font-size: 10px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 1px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.header-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition);
+  position: relative;
+  border: none;
+  flex-shrink: 0;
+}
+
+.header-icon-btn:hover { background: rgba(255,255,255,0.25); }
+
+.header-back-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+  padding: var(--sp-1) 0;
+}
+
+.header-page-title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--c-white);
+}
+
+/* ── Notification Badge ─────────────────────────────────── */
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 15px;
+  height: 15px;
+  background: var(--c-orange);
+  border-radius: var(--r-full);
+  font-size: 9px;
+  font-weight: var(--fw-extrabold);
+  color: var(--c-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 1.5px solid var(--c-blue-800);
+}
+
+/* ── Avatar ─────────────────────────────────────────────── */
+.avatar-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--c-white);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Bottom Nav ─────────────────────────────────────────── */
+.bottom-nav {
+  height: var(--bottomnav-h);
+  background: var(--c-white);
+  border-top: var(--border-base);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: var(--sp-1) var(--sp-2);
+  cursor: pointer;
+  transition: opacity var(--transition);
+}
+
+.nav-icon {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  transition: background var(--transition);
+}
+
+.nav-item.active .nav-icon { background: var(--c-blue-50); }
+
+.nav-label {
+  font-size: 10px;
+  font-weight: var(--fw-medium);
+  color: var(--c-gray-500);
+  line-height: 1;
+}
+
+.nav-item.active .nav-label { color: var(--c-blue); font-weight: var(--fw-bold); }
+
+/* ── Section ────────────────────────────────────────────── */
+.content-pad { padding: var(--sp-4); }
+.content-pad--sm { padding: var(--sp-3); }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-3);
+}
+
+.section-title {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--c-gray-800);
+}
+
+.section-more {
+  font-size: var(--fs-sm);
+  color: var(--c-blue);
+  font-weight: var(--fw-semibold);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+/* ── Cards ──────────────────────────────────────────────── */
+.card {
+  background: var(--c-white);
+  border-radius: var(--r-md);
+  border: var(--border-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.card--lg { border-radius: var(--r-lg); }
+.card--flat { box-shadow: none; }
+
+/* ── Badges ─────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.badge--critical { background: var(--c-critical-bg); color: var(--c-critical); }
+.badge--high     { background: var(--c-high-bg);     color: var(--c-high); }
+.badge--medium   { background: var(--c-medium-bg);   color: #B8860B; }
+.badge--low      { background: var(--c-low-bg);      color: var(--c-low); }
+.badge--success  { background: var(--c-success-bg);  color: var(--c-success); }
+.badge--info     { background: var(--c-blue-50);     color: var(--c-blue); }
+.badge--gray     { background: var(--c-gray-100);    color: var(--c-gray-600); }
+.badge--processing { background: var(--c-blue-50); color: var(--c-blue); }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  padding: 12px 16px;
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--c-blue);
+  color: var(--c-white);
+}
+.btn--primary:hover { background: var(--c-blue-700); }
+.btn--primary:active { transform: scale(0.98); }
+
+.btn--secondary {
+  background: var(--c-white);
+  color: var(--c-blue);
+  border: 1.5px solid var(--c-blue);
+}
+.btn--secondary:hover { background: var(--c-blue-50); }
+
+.btn--ghost {
+  background: var(--c-gray-100);
+  color: var(--c-gray-700);
+}
+
+.btn--danger {
+  background: var(--c-critical-bg);
+  color: var(--c-critical);
+}
+
+.btn--sm { padding: 8px 14px; font-size: var(--fs-sm); border-radius: var(--r-xs); }
+.btn--lg { padding: 14px 16px; font-size: var(--fs-lg); border-radius: var(--r-md); }
+
+.btn-row {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.btn-row .btn { flex: 1; }
+
+/* ── Form Elements ──────────────────────────────────────── */
+.form-group { margin-bottom: var(--sp-3); }
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--c-gray-700);
+  margin-bottom: 5px;
+}
+
+.form-label .req { color: var(--c-orange); }
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  border: 1.5px solid var(--c-gray-300);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-size: var(--fs-md);
+  color: var(--c-gray-800);
+  background: var(--c-white);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: var(--font-base);
+  outline: none;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--c-blue);
+  box-shadow: 0 0 0 3px rgba(0,86,160,0.1);
+}
+
+.form-input--active {
+  border-color: var(--c-blue);
+  background: var(--c-blue-50);
+}
+
+.form-textarea { resize: vertical; min-height: 80px; line-height: var(--lh-relaxed); }
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ADB5BD' stroke-width='2'%3E%3Cpolyline points='6,9 12,15 18,9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+
+.form-hint { font-size: 10px; color: var(--c-gray-500); margin-top: 4px; }
+.form-error { font-size: 10px; color: var(--c-critical); margin-top: 4px; display: flex; align-items: center; gap: 3px; }
+
+/* ── Toggle Switch ───────────────────────────────────────── */
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--c-gray-300);
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.toggle input:checked + .toggle-track { background: var(--c-blue); }
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--c-white);
+  border-radius: 50%;
+  transition: transform var(--transition);
+  pointer-events: none;
+  box-shadow: var(--shadow-xs);
+}
+
+.toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+
+/* ── Step Indicator ─────────────────────────────────────── */
+.step-indicator {
+  display: flex;
+  background: var(--c-gray-100);
+  border-radius: var(--r-full);
+  padding: 3px;
+  margin-bottom: var(--sp-4);
+}
+
+.step-dot {
+  flex: 1;
+  text-align: center;
+  padding: 5px 2px;
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  color: var(--c-gray-500);
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.step-dot.active { background: var(--c-blue); color: var(--c-white); }
+.step-dot.done { color: var(--c-blue); }
+
+/* ── Info Box ────────────────────────────────────────────── */
+.info-box {
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+}
+
+.info-box--blue {
+  background: var(--c-blue-50);
+  border: 1px solid var(--c-blue-200);
+  color: var(--c-blue-500);
+}
+
+.info-box--success {
+  background: var(--c-success-bg);
+  border: 1px solid var(--c-success-border);
+  color: var(--c-success);
+}
+
+.info-box--warning {
+  background: var(--c-warning-bg);
+  border: 1px solid var(--c-warning-border);
+  color: var(--c-warning);
+}
+
+.info-box--danger {
+  background: var(--c-critical-bg);
+  border: 1px solid var(--c-critical-border);
+  color: var(--c-critical);
+}
+
+.info-box-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.info-box-body { font-size: var(--fs-xs); line-height: var(--lh-relaxed); }
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--c-gray-100); margin: var(--sp-2) 0; }
+.divider--section { height: 8px; background: var(--app-bg); margin: var(--sp-3) calc(var(--sp-4) * -1); }
+
+/* ── List Items (Settings style) ────────────────────────── */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 13px var(--sp-4);
+  border-bottom: var(--border-light);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { background: var(--c-gray-50); }
+
+.list-item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.list-item-icon--blue { background: var(--c-blue-50); }
+.list-item-icon--orange { background: var(--c-orange-bg); }
+.list-item-icon--success { background: var(--c-success-bg); }
+.list-item-icon--danger { background: var(--c-critical-bg); }
+
+.list-item-content { flex: 1; min-width: 0; }
+
+.list-item-title {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--c-gray-800);
+}
+
+.list-item-sub {
+  font-size: var(--fs-xs);
+  color: var(--c-gray-500);
+  margin-top: 2px;
+}
+
+.list-item-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+.list-item-value {
+  font-size: var(--fs-sm);
+  color: var(--c-gray-600);
+}
+
+/* ── Stat Cards ─────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+.stat-card {
+  background: var(--c-white);
+  border: var(--border-base);
+  border-radius: var(--r-md);
+  padding: var(--sp-3);
+  text-align: center;
+  box-shadow: var(--shadow-xs);
+}
+
+.stat-card-num {
+  font-size: var(--fs-4xl);
+  font-weight: var(--fw-extrabold);
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.stat-card-label {
+  font-size: 10px;
+  color: var(--c-gray-500);
+}
+
+.stat-card-num--blue     { color: var(--c-blue); }
+.stat-card-num--success  { color: var(--c-success); }
+.stat-card-num--orange   { color: var(--c-orange); }
+.stat-card-num--critical { color: var(--c-critical); }
+
+/* ── Lang Chips ─────────────────────────────────────────── */
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-top: var(--sp-2);
+}
+
+.lang-chip {
+  border: 1.5px solid var(--c-gray-300);
+  border-radius: var(--r-xs);
+  padding: 6px 4px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  color: var(--c-gray-600);
+  background: var(--c-white);
+  cursor: pointer;
+  transition: all var(--transition);
+  user-select: none;
+}
+
+.lang-chip.selected,
+.lang-chip:hover {
+  border-color: var(--c-blue);
+  background: var(--c-blue-50);
+  color: var(--c-blue);
+}
+
+/* ── Lang Tabs ──────────────────────────────────────────── */
+.lang-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-3);
+}
+
+.lang-tab {
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  border: 1.5px solid var(--c-gray-300);
+  color: var(--c-gray-600);
+  background: var(--c-white);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.lang-tab.active {
+  border-color: var(--c-blue);
+  background: var(--c-blue);
+  color: var(--c-white);
+}
+
+/* ── Risk Items ─────────────────────────────────────────── */
+.risk-item {
+  background: var(--c-white);
+  border: var(--border-base);
+  border-radius: var(--r-sm);
+  padding: 11px 13px;
+  margin-bottom: var(--sp-2);
+  border-left: 3px solid transparent;
+}
+
+.risk-item--critical { border-left-color: var(--c-critical); }
+.risk-item--high     { border-left-color: var(--c-high); }
+.risk-item--medium   { border-left-color: var(--c-medium); }
+.risk-item--low      { border-left-color: var(--c-low); }
+
+.risk-item-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.risk-item-num {
+  font-size: 10px;
+  font-weight: var(--fw-extrabold);
+  color: var(--c-gray-400);
+  min-width: 18px;
+}
+
+.risk-item-title {
+  flex: 1;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-gray-800);
+}
+
+.risk-item-desc {
+  font-size: 10px;
+  color: var(--c-gray-600);
+  line-height: var(--lh-relaxed);
+  margin-bottom: 4px;
+}
+
+.risk-item-law {
+  font-size: 10px;
+  color: var(--c-blue);
+  font-weight: var(--fw-medium);
+}
+
+/* ── Chat ────────────────────────────────────────────────── */
+.chat-messages {
+  flex: 1;
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  overflow-y: auto;
+  background: var(--c-gray-50);
+}
+
+.chat-msg {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: flex-start;
+}
+
+.chat-msg--user { flex-direction: row-reverse; }
+
+.chat-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+
+.chat-avatar--ai   { background: var(--c-blue);      color: var(--c-white); }
+.chat-avatar--user { background: var(--c-gray-200);  color: var(--c-gray-600); }
+
+.chat-bubble {
+  max-width: 75%;
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+}
+
+.chat-bubble--ai   { background: var(--c-white); border: var(--border-base); color: var(--c-gray-800); border-radius: 2px 12px 12px 12px; }
+.chat-bubble--user { background: var(--c-blue);  color: var(--c-white); border-radius: 12px 2px 12px 12px; }
+
+.chat-time { font-size: 9px; color: var(--c-gray-400); margin-top: 3px; }
+.chat-msg--user .chat-time { text-align: right; }
+
+.chat-input-bar {
+  background: var(--c-white);
+  border-top: var(--border-base);
+  padding: 10px var(--sp-3);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+.chat-text-input {
+  flex: 1;
+  background: var(--c-gray-100);
+  border: 1.5px solid transparent;
+  border-radius: var(--r-full);
+  padding: 9px 16px;
+  font-size: var(--fs-md);
+  color: var(--c-gray-600);
+  outline: none;
+  font-family: var(--font-base);
+  transition: border-color var(--transition);
+}
+
+.chat-text-input:focus {
+  border-color: var(--c-blue);
+  background: var(--c-white);
+}
+
+.chat-send-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--c-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+
+.chat-send-btn:hover { background: var(--c-blue-700); }
+
+.chat-mic-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--c-gray-100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.typing-indicator { display: flex; gap: 4px; padding: 2px 0; }
+.typing-dot {
+  width: 6px; height: 6px;
+  background: var(--c-gray-400);
+  border-radius: 50%;
+  animation: typing 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.3s; }
+.typing-dot:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.3; transform: scale(0.85); }
+  30% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ── Bounding Box Result Image ───────────────────────────── */
+.result-image-wrap {
+  position: relative;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #1A2A3F;
+  margin-bottom: var(--sp-3);
+  aspect-ratio: 16/9;
+}
+
+.result-image-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a2a4a 0%, #2d5a8e 50%, #1e3a5f 100%);
+}
+
+.bbox {
+  position: absolute;
+  border: 2px solid;
+  display: flex;
+  align-items: flex-start;
+}
+
+.bbox-label {
+  font-size: 8px;
+  font-weight: var(--fw-bold);
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-top: -17px;
+  color: var(--c-white);
+  white-space: nowrap;
+  display: block;
+}
+
+.bbox--critical { border-color: var(--c-critical); }
+.bbox--critical .bbox-label { background: var(--c-critical); }
+.bbox--high { border-color: var(--c-high); }
+.bbox--high .bbox-label { background: var(--c-high); }
+.bbox--medium { border-color: var(--c-medium); }
+.bbox--medium .bbox-label { background: #BF6F00; }
+
+.bbox-save-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.65);
+  border-radius: var(--r-xs);
+  padding: 5px 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--c-white);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Overall Risk Bar ────────────────────────────────────── */
+.overall-risk-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--r-md);
+  padding: 11px 14px;
+  margin-bottom: var(--sp-3);
+}
+
+.overall-risk-bar--critical {
+  background: var(--c-critical-bg);
+  border: 1px solid var(--c-critical-border);
+}
+
+.overall-risk-bar--high {
+  background: var(--c-high-bg);
+  border: 1px solid var(--c-high-border);
+}
+
+.overall-label { font-size: 10px; color: var(--c-gray-500); margin-bottom: 2px; }
+.overall-value { font-size: var(--fs-lg); font-weight: var(--fw-extrabold); }
+.overall-value--critical { color: var(--c-critical); }
+.overall-value--high { color: var(--c-high); }
+
+/* ── History Card ────────────────────────────────────────── */
+.history-card {
+  background: var(--c-white);
+  border: var(--border-base);
+  border-radius: var(--r-md);
+  padding: var(--sp-3) 13px;
+  margin-bottom: var(--sp-2);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: box-shadow var(--transition);
+}
+
+.history-card:hover { box-shadow: var(--shadow-md); }
+
+.history-card--processing { border-left: 3px solid var(--c-blue); }
+.history-card--critical   { border-left: 3px solid var(--c-critical); }
+.history-card--high       { border-left: 3px solid var(--c-high); }
+.history-card--medium     { border-left: 3px solid var(--c-medium); }
+.history-card--low        { border-left: 3px solid var(--c-low); }
+
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--sp-2);
+}
+
+.history-card-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-gray-800);
+  flex: 1;
+  padding-right: var(--sp-2);
+}
+
+.history-card-body {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.history-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, #2C3E50, #3498DB);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.history-info { flex: 1; min-width: 0; }
+
+.history-summary {
+  font-size: 11px;
+  color: var(--c-gray-600);
+  line-height: var(--lh-base);
+  margin-bottom: 5px;
+}
+
+.history-footer {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.location-text {
+  font-size: 10px;
+  color: var(--c-gray-500);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 3px;
+}
+
+/* ── Photo Attachments ───────────────────────────────────── */
+.photo-row { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+
+.photo-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-sm);
+  background: var(--c-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.photo-thumb--taken { background: linear-gradient(135deg, #2C3E50, #3498DB); }
+
+.photo-add {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-sm);
+  border: 2px dashed var(--c-gray-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-gray-400);
+  font-size: 22px;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.photo-add:hover { border-color: var(--c-blue); color: var(--c-blue); }
+
+/* ── Filter Chips ────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  margin-bottom: var(--sp-3);
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+
+.filter-chip {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  border: 1.5px solid var(--c-gray-300);
+  color: var(--c-gray-600);
+  background: var(--c-white);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filter-chip.active,
+.filter-chip:hover {
+  border-color: var(--c-blue);
+  background: var(--c-blue);
+  color: var(--c-white);
+}
+
+/* ── Notification Items ─────────────────────────────────── */
+.notif-item {
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: var(--border-light);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.notif-item:hover { background: var(--c-gray-50); }
+.notif-item.unread { background: var(--c-blue-50); }
+
+.notif-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notif-icon--success { background: var(--c-success-bg); }
+.notif-icon--warning { background: var(--c-warning-bg); }
+.notif-icon--info    { background: var(--c-blue-50); }
+
+.notif-content { flex: 1; min-width: 0; }
+
+.notif-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-gray-800);
+  margin-bottom: 3px;
+}
+
+.notif-desc {
+  font-size: 11px;
+  color: var(--c-gray-600);
+  line-height: var(--lh-base);
+}
+
+.notif-time {
+  font-size: 10px;
+  color: var(--c-gray-400);
+  margin-top: 3px;
+}
+
+.notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-blue);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+/* ── Action Type Chips ──────────────────────────────────── */
+.action-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: var(--sp-2);
+}
+
+.action-chip {
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  border: 1.5px solid var(--c-gray-300);
+  color: var(--c-gray-600);
+  background: var(--c-white);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.action-chip.selected {
+  border-color: var(--c-blue);
+  background: var(--c-blue-50);
+  color: var(--c-blue);
+}
+
+/* ── Upload Zone ─────────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--c-gray-300);
+  border-radius: var(--r-lg);
+  padding: 24px var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--c-gray-50);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: var(--sp-3);
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: var(--c-blue);
+  background: var(--c-blue-50);
+}
+
+.upload-zone.has-image {
+  border: 2px solid var(--c-blue-200);
+  background: var(--c-blue-50);
+  padding: var(--sp-3);
+}
+
+.upload-zone-text {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--c-gray-600);
+}
+
+.upload-zone-hint { font-size: 11px; color: var(--c-gray-400); }
+
+.preview-img {
+  width: 100%;
+  border-radius: var(--r-md);
+  aspect-ratio: 16/10;
+  background: linear-gradient(135deg, #1a3a5f, #2d6a9f, #1e4a7a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.upload-btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+}
+
+.upload-btn {
+  border: 1.5px solid var(--c-gray-300);
+  border-radius: var(--r-sm);
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--c-gray-700);
+  background: var(--c-white);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.upload-btn:hover { border-color: var(--c-blue); color: var(--c-blue); }
+.upload-btn--primary { background: var(--c-blue); color: var(--c-white); border-color: var(--c-blue); }
+.upload-btn--primary:hover { background: var(--c-blue-700); }
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+.screen-body::-webkit-scrollbar { width: 3px; }
+.screen-body::-webkit-scrollbar-track { background: transparent; }
+.screen-body::-webkit-scrollbar-thumb { background: var(--c-gray-300); border-radius: 3px; }
+
+/* ── Utilities ──────────────────────────────────────────── */
+.text-blue     { color: var(--c-blue); }
+.text-success  { color: var(--c-success); }
+.text-orange   { color: var(--c-orange); }
+.text-critical { color: var(--c-critical); }
+.text-muted    { color: var(--c-gray-500); }
+.text-sm       { font-size: var(--fs-sm); }
+.text-xs       { font-size: var(--fs-xs); }
+.fw-bold       { font-weight: var(--fw-bold); }
+.fw-extrabold  { font-weight: var(--fw-extrabold); }
+.mt-1 { margin-top: var(--sp-1); }
+.mt-2 { margin-top: var(--sp-2); }
+.mt-3 { margin-top: var(--sp-3); }
+.mt-4 { margin-top: var(--sp-4); }
+.mb-2 { margin-bottom: var(--sp-2); }
+.mb-3 { margin-bottom: var(--sp-3); }
+.mb-4 { margin-bottom: var(--sp-4); }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: var(--sp-1); }
+.gap-2 { gap: var(--sp-2); }
+.gap-3 { gap: var(--sp-3); }
+.flex-1 { flex: 1; }
+.w-full { width: 100%; }
+
+
+@keyframes slideUp { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes slideDown { to { opacity:0; transform:translateX(-50%) translateY(10px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+  <style>
+    /* 검색바 */
+    .search-bar {
+      position: relative;
+      margin-bottom: var(--sp-3);
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--c-white);
+      border: 1.5px solid var(--c-gray-300);
+      border-radius: var(--r-full);
+      padding: 9px 16px 9px 38px;
+      font-size: var(--fs-md);
+      color: var(--c-gray-800);
+      outline: none;
+      font-family: var(--font-base);
+      transition: border-color var(--transition);
+    }
+
+    .search-input:focus { border-color: var(--c-blue); }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--c-gray-400);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    /* 이력 카드 */
+    .hist-card {
+      background: var(--c-white);
+      border: var(--border-base);
+      border-radius: var(--r-md);
+      padding: var(--sp-3) 13px;
+      margin-bottom: var(--sp-2);
+      box-shadow: var(--shadow-xs);
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: all var(--transition);
+    }
+
+    .hist-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .hist-card:active { transform: scale(0.99); }
+
+    /* 분석중 카드 */
+    .hist-card--processing {
+      border-left: 3px solid var(--c-blue);
+    }
+
+    .processing-bar {
+      background: var(--c-blue-50);
+      border-radius: var(--r-xs);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .processing-spinner {
+      width: 16px; height: 16px;
+      border: 2.5px solid var(--c-blue-200);
+      border-top-color: var(--c-blue);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .processing-text { font-size: 11px; color: var(--c-blue); }
+
+    /* 카드 헤더 */
+    .hist-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 7px;
+    }
+
+    .hist-card-title-area { flex: 1; padding-right: var(--sp-2); min-width: 0; }
+    .hist-card-title {
+      font-size: var(--fs-md);
+      font-weight: var(--fw-bold);
+      color: var(--c-gray-800);
+      margin-bottom: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hist-card-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+    .hist-card-date { font-size: 10px; color: var(--c-gray-400); white-space: nowrap; }
+
+    /* 카드 바디 */
+    .hist-card-body { display: flex; gap: 10px; align-items: flex-start; }
+
+    .hist-thumb {
+      width: 54px; height: 54px;
+      border-radius: var(--r-sm);
+      background: linear-gradient(135deg, #2C3E50, #3498DB);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hist-info { flex: 1; min-width: 0; }
+    .hist-summary {
+      font-size: 11px;
+      color: var(--c-gray-600);
+      line-height: var(--lh-base);
+      margin-bottom: 5px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .hist-footer { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+
+    /* 이월 없는 카드 좌측 테두리 */
+    .hist-card--critical { border-left: 3px solid var(--c-critical); }
+    .hist-card--high     { border-left: 3px solid var(--c-high); }
+    .hist-card--medium   { border-left: 3px solid var(--c-medium); }
+    .hist-card--low      { border-left: 3px solid var(--c-low); }
+
+    /* 결과 없음 */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 24px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 64px; height: 64px;
+      background: var(--c-gray-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .empty-title { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--c-gray-600); margin-bottom: 6px; }
+    .empty-desc { font-size: var(--fs-sm); color: var(--c-gray-400); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div id="header-root"></div>
+
+  <main class="screen-body">
+    <div class="content-pad">
+      <!-- 검색 -->
+      <div class="search-bar">
+        <span class="search-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" class="search-input" placeholder="작업명, 위치로 검색" id="searchInput" oninput="filterCards()">
+      </div>
+
+      <!-- 필터 칩 -->
+      <div class="filter-bar">
+        <div class="filter-chip active" onclick="setFilter(this,'all')">전체</div>
+        <div class="filter-chip" onclick="setFilter(this,'processing')">분석중</div>
+        <div class="filter-chip" onclick="setFilter(this,'completed')">완료</div>
+        <div class="filter-chip" onclick="setFilter(this,'critical')">CRITICAL</div>
+        <div class="filter-chip" onclick="setFilter(this,'high')">HIGH</div>
+        <div class="filter-chip" onclick="setFilter(this,'action-needed')">조치필요</div>
+      </div>
+
+      <!-- 카드 목록 -->
+      <div id="cardList">
+
+        <!-- 분석중 -->
+        <a href="04d_risk_result.html" class="hist-card hist-card--processing" data-status="processing" data-risk="">
+          <div class="hist-card-header">
+            <div class="hist-card-title-area">
+              <div class="hist-card-title">옥외변전소 접지공사</div>
+              <div class="location-text">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                경기 수원시 팔달구
+              </div>
+            </div>
+            <div class="hist-card-meta">
+              <span class="badge badge--processing">분석 중</span>
+              <span class="hist-card-date">03.19 15:42</span>
+            </div>
+          </div>
+          <div class="processing-bar">
+            <div class="processing-spinner"></div>
+            <span class="processing-text">AI 분석 진행 중... 완료 시 알림을 보내드립니다.</span>
+          </div>
+        </a>
+
+        <!-- CRITICAL -->
+        <a href="04d_risk_result.html" class="hist-card hist-card--critical" data-status="completed" data-risk="critical">
+          <div class="hist-card-header">
+            <div class="hist-card-title-area">
+              <div class="hist-card-title">345호 변전소 증설 공사</div>
+              <div class="location-text">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                경기 수원시 인계동
+              </div>
+            </div>
+            <div class="hist-card-meta">
+              <span class="badge badge--critical">CRITICAL</span>
+              <span class="hist-card-date">03.19 14:23</span>
+            </div>
+          </div>
+          <div class="hist-card-body">
+            <div class="hist-thumb">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <div class="hist-info">
+              <div class="hist-summary">안전모 미착용, 고압선 근접 작업 등 3건의 위험 요소 식별, 즉각 조치 필요</div>
+              <div class="hist-footer">
+                <span class="badge badge--success">조치완료</span>
+                <span style="font-size:10px;color:var(--c-gray-500);">위험 3건</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- HIGH -->
+        <a href="04d_risk_result.html" class="hist-card hist-card--high" data-status="completed" data-risk="high">
+          <div class="hist-card-header">
+            <div class="hist-card-title-area">
+              <div class="hist-card-title">배전선로 교체 작업</div>
+              <div class="location-text">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                경기 화성시 남양동
+              </div>
+            </div>
+            <div class="hist-card-meta">
+              <span class="badge badge--high">HIGH</span>
+              <span class="hist-card-date">03.18 10:05</span>
+            </div>
+          </div>
+          <div class="hist-card-body">
+            <div class="hist-thumb" style="background:linear-gradient(135deg,#1e3a2a,#2d6a45);"></div>
+            <div class="hist-info">
+              <div class="hist-summary">안전발판 미설치 구간 식별, 추가 조치 진행 필요</div>
+              <div class="hist-footer">
+                <span class="badge badge--gray">조치필요</span>
+                <span style="font-size:10px;color:var(--c-gray-500);">위험 2건</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- MEDIUM -->
+        <a href="04d_risk_result.html" class="hist-card hist-card--medium" data-status="completed" data-risk="medium">
+          <div class="hist-card-header">
+            <div class="hist-card-title-area">
+              <div class="hist-card-title">GIS 설비 교체 공사</div>
+              <div class="location-text">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                경기 안양시 만안구
+              </div>
+            </div>
+            <div class="hist-card-meta">
+              <span class="badge badge--medium">MEDIUM</span>
+              <span class="hist-card-date">03.17 14:15</span>
+            </div>
+          </div>
+          <div class="hist-card-body">
+            <div class="hist-thumb" style="background:linear-gradient(135deg,#2a1e3a,#5a2d6a);"></div>
+            <div class="hist-info">
+              <div class="hist-summary">SF6 가스 누출 점검 불량, 밀봉 불량 1건</div>
+              <div class="hist-footer">
+                <span class="badge badge--success">조치완료</span>
+                <span style="font-size:10px;color:var(--c-gray-500);">위험 1건</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- LOW -->
+        <a href="04d_risk_result.html" class="hist-card hist-card--low" data-status="completed" data-risk="low">
+          <div class="hist-card-header">
+            <div class="hist-card-title-area">
+              <div class="hist-card-title">송전탑 외함 점검</div>
+              <div class="location-text">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                경기 용인시 기흥구
+              </div>
+            </div>
+            <div class="hist-card-meta">
+              <span class="badge badge--low">LOW</span>
+              <span class="hist-card-date">03.17 09:30</span>
+            </div>
+          </div>
+          <div class="hist-card-body">
+            <div class="hist-thumb" style="background:linear-gradient(135deg,#1e3a2a,#2d6a45);"></div>
+            <div class="hist-info">
+              <div class="hist-summary">전반적 양호, 일부 접지선 상태 확인 권장</div>
+              <div class="hist-footer">
+                <span class="badge badge--success">완료</span>
+                <span style="font-size:10px;color:var(--c-gray-500);">위험 1건</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <!-- LOW 2 -->
+        <a href="04d_risk_result.html" class="hist-card hist-card--low" data-status="completed" data-risk="low">
+          <div class="hist-card-header">
+            <div class="hist-card-title-area">
+              <div class="hist-card-title">케이블 트레이 설치 작업</div>
+              <div class="location-text">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                경기 성남시 분당구
+              </div>
+            </div>
+            <div class="hist-card-meta">
+              <span class="badge badge--low">LOW</span>
+              <span class="hist-card-date">03.16 16:00</span>
+            </div>
+          </div>
+          <div class="hist-card-body">
+            <div class="hist-thumb" style="background:linear-gradient(135deg,#2C3E50,#3498DB);"></div>
+            <div class="hist-info">
+              <div class="hist-summary">전반적 양호, 케이블 정리 및 표식 부착 권고</div>
+              <div class="hist-footer">
+                <span class="badge badge--success">완료</span>
+                <span style="font-size:10px;color:var(--c-gray-500);">위험 1건</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- 빈 결과 -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--c-gray-400)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        </div>
+        <div class="empty-title">결과가 없습니다</div>
+        <div class="empty-desc">검색어나 필터 조건을 변경해보세요</div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="nav-root"></div>
+</div>
+
+<script>
+/* ============================================================
+   KEPCO Safety AI — 공통 SVG 아이콘 + 컴포넌트 JS
+   ============================================================ */
+
+/* ── SVG 아이콘 라이브러리 ────────────────────────────────── */
+const Icon = {
+  home: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>`,
+  homeFill: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>`,
+  camera: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+  cameraFill: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4" fill="white"/></svg>`,
+  file: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>`,
+  fileFill: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8" fill="none" stroke="white" stroke-width="1.5"/></svg>`,
+  chat: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
+  chatFill: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
+  user: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+  userFill: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+  bell: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`,
+  back: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>`,
+  chevronRight: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>`,
+  chevronDown: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6,9 12,15 18,9"/></svg>`,
+  search: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+  settings: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+  lock: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`,
+  location: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  check: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>`,
+  info: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  warning: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  download: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16,6 12,2 8,6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>`,
+  pdf: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>`,
+  mic: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`,
+  send: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>`,
+  logout: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`,
+  image: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>`,
+  menu: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+  translate: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>`,
+  clock: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>`,
+};
+
+/* ── KEPCO 로고 SVG ─────────────────────────────────────── */
+const KepcoLogo = `
+  <svg width="22" height="22" viewBox="0 0 36 36">
+    <rect width="36" height="36" rx="7" fill="#0056A0"/>
+    <rect x="7" y="7" width="22" height="15" rx="2" fill="white" opacity="0.92"/>
+    <rect x="5" y="24" width="26" height="5" rx="2" fill="#FFD600"/>
+    <rect x="10" y="10" width="16" height="2.5" rx="1" fill="#0056A0"/>
+    <rect x="10" y="14" width="11" height="2" rx="1" fill="#0056A0" opacity="0.55"/>
+  </svg>`;
+
+/* ── 공통 컴포넌트 생성 함수 ──────────────────────────────── */
+
+/** 메인 헤더 (로고 + 타이틀 + 액션) */
+function renderMainHeader({ showNotif = true, notifCount = 0, userName = '홍' } = {}) {
+  return `
+  <header class="top-header">
+    <a href="index.html" class="header-logo" style="text-decoration:none;">
+      <div class="header-logo-icon">${KepcoLogo}</div>
+      <div>
+        <div class="header-title">KEPCO Safety AI</div>
+        <div class="header-subtitle">GPT 위험성 평가 포털</div>
+      </div>
+    </a>
+    <div class="header-actions">
+      ${showNotif ? `
+      <button class="header-icon-btn" onclick="location.href='06_notifications.html'" aria-label="알림">
+        ${Icon.bell}
+        ${notifCount > 0 ? `<span class="notif-badge">${notifCount}</span>` : ''}
+      </button>` : ''}
+      <button class="avatar-circle" onclick="location.href='08_mypage.html'">${userName}</button>
+    </div>
+  </header>`;
+}
+
+/** 뒤로가기 헤더 */
+function renderBackHeader({ title = '', subtitle = '', backHref = '#', actions = '' } = {}) {
+  return `
+  <header class="top-header">
+    <a href="${backHref}" class="header-back-btn" style="text-decoration:none; flex:1; min-width:0;">
+      <span style="color:white; display:flex; align-items:center; flex-shrink:0;">${Icon.back}</span>
+      <div style="min-width:0;">
+        <div class="header-page-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${title}</div>
+        ${subtitle ? `<div class="header-subtitle" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${subtitle}</div>` : ''}
+      </div>
+    </a>
+    ${actions ? `<div class="header-actions" style="flex-shrink:0;">${actions}</div>` : ''}
+  </header>`;
+}
+
+/** 하단 네비게이션 */
+function renderBottomNav(active = 'home') {
+  const items = [
+    { id: 'home',    href: '02_home.html',        icon: Icon.home,     iconFill: Icon.homeFill,   label: '홈' },
+    { id: 'assess',  href: '03a_risk_step1.html',  icon: Icon.camera,   iconFill: Icon.cameraFill, label: '평가' },
+    { id: 'history', href: '05_history.html',      icon: Icon.file,     iconFill: Icon.fileFill,   label: '내역' },
+    { id: 'chat',    href: '07a_chat.html',         icon: Icon.chat,     iconFill: Icon.chatFill,   label: 'AI채팅' },
+  ];
+  return `
+  <nav class="bottom-nav" role="navigation" aria-label="하단 메뉴">
+    ${items.map(it => `
+    <a href="${it.href}" class="nav-item${active === it.id ? ' active' : ''}" style="text-decoration:none;">
+      <div class="nav-icon" style="color:${active === it.id ? 'var(--c-blue)' : 'var(--c-gray-500)'};">
+        ${active === it.id ? it.iconFill : it.icon}
+      </div>
+      <span class="nav-label">${it.label}</span>
+    </a>`).join('')}
+  </nav>`;
+}
+
+/** 토스트 알림 */
+function showToast(msg, type = 'info', duration = 3000) {
+  const existing = document.querySelector('.kepco-toast');
+  if (existing) existing.remove();
+  const colors = { success:'#2E7D32', info:'#0056A0', warning:'#F57C00', error:'#C62828' };
+  const el = document.createElement('div');
+  el.className = 'kepco-toast';
+  el.style.cssText = `
+    position:fixed; bottom:calc(var(--bottomnav-h) + 12px); left:50%; transform:translateX(-50%);
+    background:${colors[type]}; color:white; padding:10px 18px; border-radius:9999px;
+    font-size:12px; font-weight:600; z-index:9999; white-space:nowrap;
+    box-shadow:0 4px 16px rgba(0,0,0,0.2); animation:slideUp 0.25s ease;
+    font-family:var(--font-base);`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.animation = 'slideDown 0.25s ease forwards'; setTimeout(() => el.remove(), 250); }, duration);
+}
+
+const toastStyle = `
+@keyframes slideUp { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes slideDown { to { opacity:0; transform:translateX(-50%) translateY(10px); } }`;
+
+</script>
+<script>
+  document.getElementById('header-root').innerHTML = renderBackHeader({
+    title: '평가 내역',
+    backHref: '02_home.html',
+    actions: `<button class="header-icon-btn" onclick="document.getElementById('searchInput').focus()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>`
+  });
+  document.getElementById('nav-root').innerHTML = renderBottomNav('history');
+
+  let currentFilter = 'all';
+
+  function setFilter(el, filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function filterCards() { applyFilters(); }
+
+  function applyFilters() {
+    const keyword = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('#cardList .hist-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const title = card.querySelector('.hist-card-title').textContent.toLowerCase();
+      const status = card.dataset.status;
+      const risk = card.dataset.risk;
+
+      let show = title.includes(keyword);
+      if (show && currentFilter !== 'all') {
+        if (currentFilter === 'processing') show = status === 'processing';
+        else if (currentFilter === 'completed') show = status === 'completed';
+        else if (currentFilter === 'action-needed') show = card.querySelector('.badge--gray') !== null;
+        else show = risk === currentFilter;
+      }
+
+      card.style.display = show ? 'block' : 'none';
+      if (show) visible++;
+    });
+
+    document.getElementById('emptyState').style.display = visible === 0 ? 'flex' : 'none';
+  }
+</script>
+</body>
+</html>
