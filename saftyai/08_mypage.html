@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>KEPCO Safety AI — 마이페이지</title>
+  <title>AIM SAFETY — 마이페이지</title>
   <style>
 /* ============================================================
-   KEPCO Safety AI — 공통 디자인 시스템
+   AIM SAFETY — 공통 디자인 시스템
    Pretendard 폰트, 컬러 토큰, 컴포넌트 공통 스타일
    ============================================================ */
 
@@ -1767,7 +1767,7 @@ body {
           </svg>
         </div>
         <div style="flex:1;">
-          <div class="app-info-title">KEPCO Safety AI</div>
+          <div class="app-info-title">AIM SAFETY</div>
           <div class="app-info-ver">버전 2.0.1 (최신)</div>
           <div class="app-info-build">Build 2026.03.15 · Next.js 14</div>
         </div>
@@ -1788,7 +1788,7 @@ body {
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ============================================================
-   KEPCO Safety AI — 공통 SVG 아이콘 + 컴포넌트 JS
+   AIM SAFETY — 공통 SVG 아이콘 + 컴포넌트 JS
    ============================================================ */
 
 /* ── SVG 아이콘 라이브러리 ────────────────────────────────── */
@@ -1841,13 +1841,7 @@ const KepcoLogo = `
 function renderMainHeader({ showNotif = true, notifCount = 0, userName = '홍' } = {}) {
   return `
   <header class="top-header">
-    <a href="index.html" class="header-logo" style="text-decoration:none;">
-      <div class="header-logo-icon">${KepcoLogo}</div>
-      <div>
-        <div class="header-title">KEPCO Safety AI</div>
-        <div class="header-subtitle">GPT 위험성 평가 포털</div>
-      </div>
-    </a>
+    <a href="index.html" class="header-logo" style="text-decoration:none;"><img src="img/23_BI_AS_W.svg" alt="AIM SAFETY" style="height:30px;width:auto;display:block;" /></a>
     <div class="header-actions">
       ${showNotif ? `
       <button class="header-icon-btn" onclick="location.href='06_notifications.html'" aria-label="알림">
